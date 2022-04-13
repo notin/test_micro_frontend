@@ -44,7 +44,7 @@ module.exports = {
       name: "mf_component",
       filename: "remoteEntry.js",
       remotes: {
-        microfrontend : "microfrontend@https://localhost@9091/remoteEntry.js"
+        microfrontend : "microfrontend@http://localhost:9090/remoteEntry.js"
       },
       exposes: {
         "./Header" : "/src/Header.tsx",
