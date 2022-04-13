@@ -1,5 +1,5 @@
 // @ts-ignore
-import React from "react";
+import React, {Fragment, Suspense, useState} from "react";
 // @ts-ignore
 import ReactDOM from "react-dom";
 // @ts-ignore
@@ -9,13 +9,34 @@ import Footer from "mf_component/Footer";
 
 import "./index.css";
 
-const App = () => (
 
+const App = () => {
 
-  <div className="container">
-      <Header/>
-    <div>Home Page Content</div>
-      <Footer/>
-  </div>
-);
-ReactDOM.render(<App />, document.getElementById("app"));
+    const [s, setS] = useState(false);
+
+    const getHeader = () => {
+        if (s) {
+            const header = <Header/>;
+            return header;
+        }
+
+    }
+
+    const getDiv = () => {
+        const header = getHeader();
+        let fragment = <Suspense fallback={<Fragment/>}>
+            <div className="container">
+                {header}
+                <div>Home Page Content</div>
+                <Footer/>
+                <button onClick={() => {
+                    setS(!s)
+                }}/>
+            </div>
+        </Suspense>;
+
+        return fragment;
+    }
+    return getDiv()
+};
+ReactDOM.render(<App/>, document.getElementById("app"));
