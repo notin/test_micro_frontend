@@ -39,6 +39,7 @@ module.exports = {
     ],
   },
 
+
   plugins: [
     new ModuleFederationPlugin({
       name: "mf_component",
