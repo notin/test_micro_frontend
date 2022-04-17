@@ -1,0 +1,79 @@
+
+.nav{
+  paddingTop: ‘20px’;
+  align-content: center;
+  list-style-type: none;
+  text-align: left;
+  flex: 50%;
+  padding: 10px;
+  align-content: center;
+  list-style-type: none;
+  text-align: left;
+}
+body{
+  background-color: #404147;
+}
+.displayInblock{
+display: flex;
+}
+
+.list{
+  max-height: 85vh;
+  overflow-y: auto;
+  //overflow-x: auto;
+}
+.list ::-webkit-scrollbar{
+  scrollbar-color: black;
+  scrollbar-width: thin;
+}
+.dark li{
+  background-color: #404147 ;
+  color: darkgray;
+}
+
+.dark div{
+  background-color: #404147 ;
+  color: darkgray;
+}
+
+
+.vbox {
+  display: flex;
+  flex-direction: column !important;
+  position: relative;
+}
+
+.hbox {
+  display: flex;
+  flex-direction: row !important;
+  position: relative;
+}
+
+.main{
+ max-height: 85vh;
+}
+
+.listItems{
+  align-content: center;
+  list-style-type: none;
+  text-align: left;
+  position: relative;
+  padding: .5rem 1rem;
+  color: #212529;
+  text-decoration: none;
+  background-color: #fff;
+  border: 1px solid rgba(0,0,0,.125) !important;
+  }
+
+.row {
+  display: flex;
+}
+
+/* Create two equal columns that sits next to each other */
+.column {
+
+  height: 300px; /* Should be removed. Only for demonstration */
+}
+.scrollable-element {
+  scrollbar-color: dark;
+}
