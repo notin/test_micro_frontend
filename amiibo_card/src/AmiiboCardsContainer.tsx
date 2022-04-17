@@ -7,12 +7,12 @@ const AmiiboCardsContainer = (): JSX.Element => {
     const fetchCards = async () => {
 
         const requestHeaders: HeadersInit = new Headers();
-        requestHeaders.set('Content-Type', 'application/json');
+        requestHeaders.set('Accept', 'application/json');
 
-        let response = await fetch("http://localhost:8080/api/amiiboCards", {
+        let response = await fetch("http://192.168.7.69:8080/api/amiiboCards", {
+            mode: "no-cors",
             method: 'GET',
             headers: requestHeaders,
-
         });
         let promise = await response.json();
     }
