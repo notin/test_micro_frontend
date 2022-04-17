@@ -1,4 +1,6 @@
+// @ts-ignore
 import React from "react";
+// @ts-ignore
 import ReactDOM from "react-dom";
 import amiibo_cards_container from "./amiibo_cards_container"
 
