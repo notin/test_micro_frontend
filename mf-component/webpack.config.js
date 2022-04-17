@@ -48,7 +48,8 @@ module.exports = {
       },
       exposes: {
         "./Header" : "/src/Header.tsx",
-        "./Footer" : "/src/Footer.tsx"
+        "./Footer" : "/src/Footer.tsx",
+        "./Times": "/src/Times.tsx",
       },
       shared: {
         ...deps,
