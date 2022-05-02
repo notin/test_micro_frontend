@@ -2,7 +2,7 @@
 import React from "react";
 // @ts-ignore
 import ReactDOM from "react-dom";
-import AmiiboCardsContainer from "./AmiiboCardsContainer"
+import IcndbContainer from "./IcndbContainer"
 
 import "./index.css";
 
@@ -12,7 +12,7 @@ const App = () => (
     <div>Framework: react</div>
     <div>Language: TypeScript</div>
     <div>CSS: Empty CSS</div>
-    <AmiiboCardsContainer/>
+    <IcndbContainer/>
   </div>
 );
 ReactDOM.render(<App />, document.getElementById("app"));
