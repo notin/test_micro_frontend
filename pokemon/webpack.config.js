@@ -43,8 +43,13 @@ module.exports = {
     new ModuleFederationPlugin({
       name: "pokemon",
       filename: "remoteEntry.js",
-      remotes: {},
-      exposes: {},
+      remotes: {
+        left_nav_pokemon : "left_nav_pokemon@http://localhost:9093/remoteEntry.js"
+      },
+      exposes: {
+        // will probably need to be removed
+        "./Pokemon" : "/src/Pokemon.tsx",
+      },
       shared: {
         ...deps,
         react: {

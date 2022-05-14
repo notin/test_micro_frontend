@@ -2,9 +2,10 @@
 import React, {useState, useEffect, createContext, Context, useRef} from "react";
 import "./LeftHandNav.scss"
 // @ts-ignore
-import {BrowserRouter as Router, Route, Link, useHistory} from "react-router-dom";
+import {BrowserRouter as Router, Routes, Route, Link, useHistory} from "react-router-dom";
 // import Pokemon from "./pokemon/Pokemon";
 // @ts-ignore
+import Pokemon from "pokemon/Pokemon";
 import Collapsible from "react-collapsible";
 
 function LeftNav() {
@@ -99,14 +100,16 @@ function LeftNav() {
 // @ts-ignore
     let div = <div className="dark" ref={listInnerRef}>
         <div className="hbox">
+            <Routes>
             <Router>
                 <div id="pokemonNav">
                     {getPokeList()}
                 </div>
                 <div className="list">
-                    {/*<Route path="/components/pokemon/" component={Pokemon}/>*/}
+                    <Route path="l"/>
                 </div>
             </Router>
+            </Routes>
         </div>
     </div>
     return div
