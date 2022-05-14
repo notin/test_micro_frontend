@@ -45,6 +45,7 @@ function LeftNav() {
 
         let these : [] = await fetchFromURL(urlLocal);
         let nextResults : []  = await fetchFromURL(next);
+        // @ts-ignore
         let total: never[] | ((prevState: never[]) => never[]) = [] ;
         // @ts-ignore
         items.forEach(x=> total.push(x))
@@ -55,18 +56,15 @@ function LeftNav() {
         setItems(total);
     }
 
-    function getLi(item:any, id:number) {
+    const getLi = (item:any, id:number) =>{
         let li =
-            <Link id={item.name + "-" + id}
-                  to={{pathname :"/components/pokemon/Pokemon/"+item.name,
-                      state: {item}}}
-            >
+            <div id={item.name + "-" + id}>
                 <li className="listItems" key={id}>
                     <div >
                         {item.name}
                     </div>
                 </li>
-            </Link>
+            </div>
         return li;
     }
     let id = 0;
@@ -97,21 +95,26 @@ function LeftNav() {
         </ul>;
     }
 
+    function getList() {
+        return <div className="dark" ref={listInnerRef}>
+            <div className="hbox">
+                {/*<Routes>*/}
+                    {/*<Router>*/}
+                        <div id="pokemonNav">
+                            {getPokeList()}
+                        </div>
+                        {/*<div className="list">*/}
+                        {/*    <Route path="l"/>*/}
+                        {/*</div>*/}
+                    {/*</Router>*/}
+                {/*</Routes>*/}
+                <div>I am a Pokemon</div>
+            </div>
+        </div>;
+    }
+
 // @ts-ignore
-    let div = <div className="dark" ref={listInnerRef}>
-        <div className="hbox">
-            <Routes>
-            <Router>
-                <div id="pokemonNav">
-                    {getPokeList()}
-                </div>
-                <div className="list">
-                    <Route path="l"/>
-                </div>
-            </Router>
-            </Routes>
-        </div>
-    </div>
+    let div = getList()
     return div
 }
 export default LeftNav;
