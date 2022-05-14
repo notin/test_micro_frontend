@@ -19,6 +19,7 @@ function LeftNav() {
     let [filtered, setFilter] = useState<any[]>([])
     let [searchTerm, setSearchTerm] = useState<any[]>([])
     let [items, setItems] = useState<any[]>([])
+    let [selected, setSelected] = useState<any[]>()
     let [urlState, setUrl] = useState<any[]>([]);
     let handleScroll = async ( e:any) => {
         let b = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
@@ -60,7 +61,7 @@ function LeftNav() {
         let li =
             <div id={item.name + "-" + id}>
                 <li className="listItems" key={id}>
-                    <div >
+                    <div onClick={()=>{setSelected(item.name)}}>
                         {item.name}
                     </div>
                 </li>
@@ -95,20 +96,27 @@ function LeftNav() {
         </ul>;
     }
 
+    function getPokemon() {
+        let div1 = <React.Fragment/>
+        if(selected){
+           div1 = <div className="list">
+                <Pokemon name={selected}/>
+            </div>;
+        }
+        return div1;
+    }
+
     function getList() {
         return <div className="dark" ref={listInnerRef}>
             <div className="hbox">
                 {/*<Routes>*/}
-                    {/*<Router>*/}
-                        <div id="pokemonNav">
-                            {getPokeList()}
-                        </div>
-                        {/*<div className="list">*/}
-                        {/*    <Route path="l"/>*/}
-                        {/*</div>*/}
-                    {/*</Router>*/}
+                {/*<Router>*/}
+                <div id="pokemonNav">
+                    {getPokeList()}
+                </div>
+                {getPokemon()}
+                {/*</Router>*/}
                 {/*</Routes>*/}
-                <div>I am a Pokemon</div>
             </div>
         </div>;
     }
