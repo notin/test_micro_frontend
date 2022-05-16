@@ -6,9 +6,9 @@ import {Link, Route, useLocation} from "react-router-dom";
 // import Form from "../form/Form";
 import pk from "./contexts/pk";
 // import Move from "../move/Move";
-// import ActionSideBar from "../ActionsSideBar/ActionSideBar";
-// import {faArrowDown, faArrowLeft} from "@fortawesome/free-solid-svg-icons";
-// import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import ActionSideBar from '../src/ActionsSideBar/ActionSideBar'
+import {faArrowDown, faArrowLeft, faArrowRight} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 export const PokemonContext = createContext(pk);
 
@@ -18,6 +18,7 @@ let Pokemon = (name: any) => {
     let [pokemon, setPokemon] = useState([false]);
     let [actionsVisible, setActionsVisible] = useState(url);
     let [titleClass, setTitleClass] = useState(actionsVisible);
+    const [nameArrow, setNameArrow] = useState(faArrowRight)
     useEffect(() => {
         fetchItems().then(r =>
             console.log("got pokemon details"))
@@ -44,11 +45,14 @@ let Pokemon = (name: any) => {
         setTitleClass("pokeTitleLarge");
     }
 
-    // let toggleActions=()=> {
-    //     setActionsVisible(!actionsVisible);
-    //     let titleClazz = titleClass == "pokeTitleLarge" ? "pokeTitleMinimized":"pokeTitleLarge";
-    //     setTitleClass(titleClazz);
-    // }
+    let toggleActions=()=> {
+        // @ts-ignore
+        setActionsVisible(!actionsVisible);
+        let titleClazz = titleClass == "pokeTitleLarge" ? "pokeTitleMinimized":"pokeTitleLarge";
+        setTitleClass(titleClazz);
+        const faArrow = nameArrow == faArrowDown ? faArrowRight : faArrowDown;
+        setNameArrow(faArrow);
+    }
 
     // @ts-ignore
     let p = <>{name}</>;
@@ -93,9 +97,10 @@ let Pokemon = (name: any) => {
                     <p>
                         <ul>
                             <div className="pokeBase hbox collapse">
+                                <FontAwesomeIcon onClick={toggleActions} className="actionOptionArrow" icon={nameArrow} style = {{paddingRight: "15px"}}></FontAwesomeIcon>
                                 {getPokemonTitle()}
 
-                                {/*<FontAwesomeIcon onClick={toggleActions} className="actionOptionArrow" icon={faArrowLeft}></FontAwesomeIcon>*/}
+
                                 {/*<div hidden={actionsVisible}><ActionSideBar></ActionSideBar></div>*/}
                                 {/*</div>*/}
                                 {/*{getForm()}*/}
