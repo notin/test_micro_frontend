@@ -73,6 +73,7 @@ let Pokemon = (name: any) => {
             {moves}</div>;
     }
 
+
     function getAbility() {
         let abilities: any [] = [];
         for (let i: number = 0; i < pk.pokeAbilityUrls.length; i++) {
