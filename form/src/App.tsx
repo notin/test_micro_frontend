@@ -2,13 +2,11 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import "./index.css";
+import Form from "./form/Form";
 
 const App = () => (
   <div className="container">
-    <div>Name: form</div>
-    <div>Framework: react</div>
-    <div>Language: TypeScript</div>
-    <div>CSS: Empty CSS</div>
+    <Form index={0} f = {null}/>
   </div>
 );
 ReactDOM.render(<App />, document.getElementById("app"));

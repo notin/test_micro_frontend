@@ -3,7 +3,8 @@ import React, {useState, useEffect, createContext} from "react";
 import "./Pokemon.scss"
 import {Link, Route, useLocation} from "react-router-dom";
 // import Ability from "../abilities/Ability";
-// import Form from "../form/Form";
+// @ts-ignore
+import Form from "form/Form";
 import pk from "./contexts/pk";
 // import Move from "../move/Move";
 import ActionSideBar from '../src/ActionsSideBar/ActionSideBar'
@@ -12,7 +13,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 export const PokemonContext = createContext(pk);
 
-let Pokemon = (name: any) => {
+let Pokemon = (name ?: any) => {
 
     let [url, setUrl] = useState("https://pokeapi.co/api/v2/pokemon/?limit=200")
     let [pokemon, setPokemon] = useState([false]);
@@ -60,7 +61,7 @@ let Pokemon = (name: any) => {
     pk.pokeName = name;
 
     function getForm() {
-        // return <Form/>;
+        return <Form/>;
     }
 
     let getMove = () => {
@@ -104,7 +105,8 @@ let Pokemon = (name: any) => {
 
                                 {/*<div hidden={actionsVisible}><ActionSideBar></ActionSideBar></div>*/}
                                 {/*</div>*/}
-                                {/*{getForm()}*/}
+
+                                {getForm()}
                                 {/*{getAbility()}*/}
                                 {/*{getMove()}*/}
                             </div>

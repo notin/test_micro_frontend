@@ -8,11 +8,11 @@ import "./IForm"
 
 
 
-let Form = ( index : number, f : IForm) => {
+let Form = ( index : number, f ?: IForm) => {
 
     // @ts-ignore
     const [url, setUrl] = useState<string>(" https://pokeapi.co/api/v2/pokemon-form/"+ index);
-    const [form, setForm] = useState<IForm>(f);
+    const [form, setForm] = useState<IForm>(f? f: null);
 
     useEffect(()=> {fetchAbilities().then(r =>
         console.log("got getting form"));
@@ -40,7 +40,7 @@ let Form = ( index : number, f : IForm) => {
 
     function getSrc() {
         // @ts-ignore
-        let src: string = form.length == undefined ? form['sprites']['front_default'] as string : "";
+        let src: string = form['sprites']? form['sprites']['front_default'] as string : "";
         let img = <img src={src}></img>;
         return img;
     }
