@@ -43,8 +43,12 @@ module.exports = {
     new ModuleFederationPlugin({
       name: "form",
       filename: "remoteEntry.js",
-      remotes: {},
-      exposes: {},
+      remotes: {
+      },
+      exposes: {
+        // will probably need to be removed
+        "./Form" : "/src/form/Form.tsx",
+      },
       shared: {
         ...deps,
         react: {

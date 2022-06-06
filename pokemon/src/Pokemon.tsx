@@ -61,7 +61,7 @@ let Pokemon = (name ?: any) => {
     pk.pokeName = name;
 
     function getForm() {
-        return <Form/>;
+        return <Form>Mark</Form>;
     }
 
     let getMove = () => {
