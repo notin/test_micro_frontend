@@ -46,10 +46,10 @@ let Pokemon = (name ?: any) => {
         setTitleClass("pokeTitleLarge");
     }
 
-    let toggleActions=()=> {
+    let toggleActions = () => {
         // @ts-ignore
         setActionsVisible(!actionsVisible);
-        let titleClazz = titleClass == "pokeTitleLarge" ? "pokeTitleMinimized":"pokeTitleLarge";
+        let titleClazz = titleClass == "pokeTitleLarge" ? "pokeTitleMinimized" : "pokeTitleLarge";
         setTitleClass(titleClazz);
         const faArrow = nameArrow == faArrowDown ? faArrowRight : faArrowDown;
         setNameArrow(faArrow);
@@ -61,7 +61,12 @@ let Pokemon = (name ?: any) => {
     pk.pokeName = name;
 
     function getForm() {
-        return <React.Fragment><Form></Form></React.Fragment>;
+        let fragment: any = <React.Fragment></React.Fragment>;
+        if (nameArrow != faArrowRight) {
+            fragment = <Form></Form>
+        }
+
+        return fragment;
     }
 
     let getMove = () => {
@@ -98,18 +103,25 @@ let Pokemon = (name ?: any) => {
                 <div id="list">
                     <p>
                         <ul>
-                            <div className="pokeBase hbox collapse">
-                                <FontAwesomeIcon onClick={toggleActions} className="actionOptionArrow" icon={nameArrow} style = {{paddingRight: "15px"}}></FontAwesomeIcon>
-                                {getPokemonTitle()}
+                            <div>
+                                <div >
+                                    <div className="pokeBase hbox"><FontAwesomeIcon onClick={toggleActions} className="actionOptionArrow" icon={nameArrow} style={{paddingRight: "15px"}}></FontAwesomeIcon>
+
+                                        {getPokemonTitle()}</div>
+
+                                    <div>
+                                        {getForm()}
+                                    </div>
+
+                                    {/*<div hidden={actionsVisible}><ActionSideBar></ActionSideBar></div>*/}
+                                    {/*</div>*/}
 
 
-                                {/*<div hidden={actionsVisible}><ActionSideBar></ActionSideBar></div>*/}
-                                {/*</div>*/}
-
-                                {getForm()}
-                                {/*{getAbility()}*/}
-                                {/*{getMove()}*/}
+                                    {/*{getAbility()}*/}
+                                    {/*{getMove()}*/}
+                                </div>
                             </div>
+
                         </ul>
                     </p>
                 </div>
