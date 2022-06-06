@@ -15,10 +15,10 @@ export const PokemonContext = createContext(pk);
 
 let Pokemon = (name ?: any) => {
 
-    let [url, setUrl] = useState("https://pokeapi.co/api/v2/pokemon/?limit=200")
-    let [pokemon, setPokemon] = useState([false]);
-    let [actionsVisible, setActionsVisible] = useState(url);
-    let [titleClass, setTitleClass] = useState(actionsVisible);
+    const [url, setUrl] = useState("https://pokeapi.co/api/v2/pokemon/?limit=200")
+    const [pokemon, setPokemon] = useState([false]);
+    const [actionsVisible, setActionsVisible] = useState(url);
+    const [titleClass, setTitleClass] = useState(actionsVisible);
     const [nameArrow, setNameArrow] = useState(faArrowRight)
     useEffect(() => {
         fetchItems().then(r =>
@@ -61,7 +61,7 @@ let Pokemon = (name ?: any) => {
     pk.pokeName = name;
 
     function getForm() {
-        return <Form>Mark</Form>;
+        return <React.Fragment><Form></Form></React.Fragment>;
     }
 
     let getMove = () => {
