@@ -8,7 +8,7 @@ import "./IForm"
 
 
 
-let Form = ( index : number) => {
+let Form = ( index : any ) => {
 
     // @ts-ignore
     const [url, setUrl] = useState<string>(" https://pokeapi.co/api/v2/pokemon-form/"+ index.index);
@@ -28,18 +28,15 @@ let Form = ( index : number) => {
             catch (e) {
                 console.log(e.message)
             }
-
-
         }
         else {
             console.log("form already exists")
         }
 
-
     }
 
-    function getType() {
-        let type: string = form == undefined ? form[0].type.name as string : "";
+    function getType(type1: { slot: number; type: { name: string; url: string } }) {
+        let type: string = type1 !== undefined ? type1.type.name as string : "";
         return  "type order is " + type;
     }
     function getOrder() {
@@ -54,6 +51,14 @@ let Form = ( index : number) => {
         return img;
     }
 
+    function getTypes() {
+        const col = [];
+        for(let i = 0; i < form.types.length; i++){
+            col.push(getType(form.types[i]))
+        }
+        return <div>{col}</div>;
+    }
+
     const getForm : any = () =>{
         let f = <React.Fragment/>
 
@@ -62,11 +67,10 @@ let Form = ( index : number) => {
                 <div className="hbox">
                     <div>
                         <div>
-                            <p>Form</p>
+                            Form
                         </div>
-                        <div>{getOrder()}</div>
-                        <p></p>
-                        <div>{getType()}</div>
+                        <div id="formOrder">{getOrder()}</div>
+                        {getTypes()}
                     </div>
                     <div className="stretch">{getSrc()}</div>
                 </div>

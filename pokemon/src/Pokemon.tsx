@@ -97,7 +97,7 @@ let Pokemon = (name : IName) => {
         const provider = <PokemonContext.Provider value={pk}>
             <div className="pokeItem ">
                 <div id="list">
-                    <p>
+                    <div>
                         <ul>
                             <div>
                                 <div >
@@ -119,7 +119,7 @@ let Pokemon = (name : IName) => {
                             </div>
 
                         </ul>
-                    </p>
+                    </div>
                 </div>
             </div>
         </PokemonContext.Provider>;
