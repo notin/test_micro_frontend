@@ -10,12 +10,15 @@ import pk from "./contexts/pk";
 import ActionSideBar from '../src/ActionsSideBar/ActionSideBar'
 import {faArrowDown, faArrowLeft, faArrowRight} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+// @ts-ignore
+import IName from "./IName";
 
 export const PokemonContext = createContext(pk);
 
-let Pokemon = (name ?: any) => {
+let Pokemon = (name : IName) => {
 
-    const [url, setUrl] = useState("https://pokeapi.co/api/v2/pokemon/?limit=200")
+    const [n, setName] = useState(name.name)
+    const [url, setUrl] = useState('https://pokeapi.co/api/v2/pokemon/'+name.name)
     const [pokemon, setPokemon] = useState([false]);
     const [actionsVisible, setActionsVisible] = useState(url);
     const [titleClass, setTitleClass] = useState(actionsVisible);
@@ -29,17 +32,8 @@ let Pokemon = (name ?: any) => {
         let data = await fetch(url);
         let items = await data.json();
         pk.pokeFormUrl = items.forms[0].url
-        for (let i = 0; i < items.abilities.length; i++) {
-            let a = items.abilities[i];
-
-            let items1 = {name: a.ability.name, url: a.ability.url};
-            pk.pokeAbilityUrls.push(items1);
-        }
-        for (let i = 0; i < items.moves.length; i++) {
-            let m = items.moves[i];
-            let items1 = {name: m.move.name, url: m.move.url, level_at: m.version_group_details[0].level_learned_at};
-            pk.pokeMoveUrls.push(items1);
-        }
+        pk.pokeAbilityUrls = items.abilities[0].url
+        pk.pokeMoveUrls = items.moves[0].url
         setPokemon(items);
         // @ts-ignore
         setActionsVisible(true)
@@ -63,7 +57,9 @@ let Pokemon = (name ?: any) => {
     function getForm() {
         let fragment: any = <React.Fragment></React.Fragment>;
         if (nameArrow != faArrowRight) {
-            fragment = <Form></Form>
+            const pokeFormUrl = pk.pokeFormUrl;
+            const i = pokeFormUrl.split('/pokemon-form/')[1];
+            fragment = <Form index = {i}></Form>
         }
 
         return fragment;

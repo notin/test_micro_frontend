@@ -19,7 +19,7 @@ function LeftNav() {
     let [filtered, setFilter] = useState<any[]>([])
     let [searchTerm, setSearchTerm] = useState<any[]>([])
     let [items, setItems] = useState<any[]>([])
-    let [selected, setSelected] = useState<any[]>()
+    let [selected, setSelected] = useState<string>()
     let [urlState, setUrl] = useState<any[]>([]);
     let handleScroll = async ( e:any) => {
         let b = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
@@ -43,7 +43,6 @@ function LeftNav() {
     let fetchItems= async () => {
         let urlLocal = urlState.length === 0 ? url : urlState
         // @ts-ignore
-
         let these : [] = await fetchFromURL(urlLocal);
         let nextResults : []  = await fetchFromURL(next);
         // @ts-ignore
