@@ -8,24 +8,33 @@ import "./IForm"
 
 
 
-let Form = ( index : number, f ?: IForm) => {
+let Form = ( index : number) => {
 
     // @ts-ignore
-    const [url, setUrl] = useState<string>(" https://pokeapi.co/api/v2/pokemon-form/"+ index);
-    const [form, setForm] = useState<IForm>(f? f: null);
+    const [url, setUrl] = useState<string>(" https://pokeapi.co/api/v2/pokemon-form/"+ index.index);
+    const [form, setForm] = useState<IForm>();
 
     useEffect(()=> {fetchAbilities().then(r =>
         console.log("got getting form"));
     ;},[url])
     let fetchAbilities= async () => {
-        if(!form){
-            let data = await fetch(url);
-            let items = await data.json();
-            let formUlr = items.forms[0].url;
-            let formJson = await fetch(formUlr)
-            let f = await formJson.json();
-            setForm(f);
+        if(!form) {
+            try{
+                console.log("setting form")
+                let data = await fetch(url);
+                let f = await data.json();
+                setForm(f);
+            }
+            catch (e) {
+                console.log(e.message)
+            }
+
+
         }
+        else {
+            console.log("form already exists")
+        }
+
 
     }
 
@@ -45,19 +54,28 @@ let Form = ( index : number, f ?: IForm) => {
         return img;
     }
 
-    return <div className="base">
-        <div className="hbox">
-            <div>
-                <div>
-                    <p>Form</p>
-                </div>
-                <div>{getOrder()}</div>
-                <p></p>
-                <div>{getType()}</div>
-            </div>
-            <div className="stretch">{getSrc()}</div>
-        </div>
+    const getForm : any = () =>{
+        let f = <React.Fragment/>
 
-    </div>
+            if(form){
+            f = <div className="base">
+                <div className="hbox">
+                    <div>
+                        <div>
+                            <p>Form</p>
+                        </div>
+                        <div>{getOrder()}</div>
+                        <p></p>
+                        <div>{getType()}</div>
+                    </div>
+                    <div className="stretch">{getSrc()}</div>
+                </div>
+
+            </div>;
+            }
+        return f
+    }
+
+    return getForm();
 }
 export default Form;

@@ -58,7 +58,7 @@ let Pokemon = (name : IName) => {
         let fragment: any = <React.Fragment></React.Fragment>;
         if (nameArrow != faArrowRight) {
             const pokeFormUrl = pk.pokeFormUrl;
-            const i = pokeFormUrl.split('/pokemon-form/')[1];
+            const i = pokeFormUrl.split('/pokemon-form/')[1].split("/")[0];
             fragment = <Form index = {i}></Form>
         }
 
@@ -82,7 +82,7 @@ let Pokemon = (name : IName) => {
             // abilities.push(<Ability index={i}/>)
         }
         return <div className="pokeBase">
-            <div>Abiliteis</div>
+            <div>Abilities</div>
             {abilities}</div>;
     }
 
