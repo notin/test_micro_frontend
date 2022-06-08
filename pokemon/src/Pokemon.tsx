@@ -35,7 +35,9 @@ let Pokemon = (name : IName) => {
         let data = await fetch(url);
         let items = await data.json();
         pk.pokeFormUrl = items.forms[0].url
-        pk.pokeAbility = items.abilities.map(x=> {name : x.ability.name } )
+        const abilityNames =[]
+        items.abilities.forEach(x=> abilityNames.push({name : x.ability.name }) );
+        setAbilities( abilityNames);
         pk.pokeMoveUrls = items.moves[0].url
         setPokemon(items);
         // @ts-ignore
@@ -80,13 +82,17 @@ let Pokemon = (name : IName) => {
 
 
     function getAbility() {
-        let col: any [] = [];
-        for (let i: number = 0; i < abilities.length; i++) {
-            col.push(<Ability index={abilities[i]}/>)
+        let fragment: any = <React.Fragment></React.Fragment>;
+        if (nameArrow != faArrowRight) {
+            let col: any [] = [];
+            for (let i: number = 0; i < abilities.length; i++) {
+                col.push(<Ability index={abilities[i]}/>)
+            }
+            fragment = <div className="pokeBase">
+                <div>Abilities</div>
+                {col}</div>;
         }
-        return <div className="pokeBase">
-            <div>Abilities</div>
-            {col}</div>;
+        return fragment;
     }
 
     function getPokemonTitle() {

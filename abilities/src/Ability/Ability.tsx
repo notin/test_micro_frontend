@@ -8,40 +8,27 @@ import AbilityDetails from "./AbilityDetails";
 
 
 interface IAbility {
-    index: number;
     name: string;
 }
 
 let Ability = (ability: IAbility ) => {
 
 // @ts-ignore
-    let [url, setURL] = useState('https://pokeapi.co/api/v2/ability/' + ability.name);
+    let [url, setURL] = useState('https://pokeapi.co/api/v2/ability/' + ability.index.name);
     let [abilities, setAbilities] = useState<AbilityType>();
 
-    useEffect(()=> {fetchAbilities().then(() =>
+    useEffect(()=> {
+        console.log("getting abilties");
+        fetchAbilities().then(() =>
         console.log("got getting ability"));
     ;},[url])
     let fetchAbilities= async () => {
         if(url) {
             let data = await fetch(url);
             let items = await data.json();
-            // @ts-ignore
-            let find = items.pokemon.find(x=>x.pokemon.name == context.pokeName);
-            if(find) {
-                let denormalized = new AbilityType(items.name, items.effect_entries)
-                setAbilities(denormalized);
 
-            }
-            else {
-                let message = "ability not associated with pokemon : " + items.name;
-                console.log(message);
-                let elementById = document.getElementById(items.name);
-                if(elementById) {
-                    message = "ability move not associated with pokemon : " + items.name;
-                    console.log(message);
-                    elementById.remove();
-                }
-            }
+            let denormalized = new AbilityType(items.name, items.effect_entries)
+            setAbilities(denormalized);
         }
 
     }

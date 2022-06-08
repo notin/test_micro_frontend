@@ -14,10 +14,10 @@ let Form = ( index : any ) => {
     const [url, setUrl] = useState<string>(" https://pokeapi.co/api/v2/pokemon-form/"+ index.index);
     const [form, setForm] = useState<IForm>();
 
-    useEffect(()=> {fetchAbilities().then(r =>
+    useEffect(()=> {fetchForm().then(r =>
         console.log("got getting form"));
     ;},[url])
-    let fetchAbilities= async () => {
+    let fetchForm= async () => {
         if(!form) {
             try{
                 console.log("setting form")
