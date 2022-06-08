@@ -5,7 +5,7 @@ const deps = require("./package.json").dependencies;
 module.exports = {
   devtool: 'source-map',
   output: {
-    publicPath: "http://localhost:9094/",
+    publicPath: "http://localhost:9096/",
   },
 
   resolve: {
@@ -13,7 +13,7 @@ module.exports = {
   },
 
   devServer: {
-    port: 9094,
+    port: 9096,
     historyApiFallback: true,
   },
 
@@ -42,16 +42,13 @@ module.exports = {
 
   plugins: [
     new ModuleFederationPlugin({
-      name: "pokemon",
+      name: "ability",
       filename: "remoteEntry.js",
       remotes: {
-        left_nav_pokemon : "left_nav_pokemon@http://localhost:9093/remoteEntry.js",
-        form : "form@http://localhost:9095/remoteEntry.js",
-        ability : "ability@http://localhost:9096/remoteEntry.js"
       },
       exposes: {
         // will probably need to be removed
-        "./Pokemon" : "/src/Pokemon.tsx",
+        "./Ability" : "/src/ability/Ability.tsx",
       },
       shared: {
         ...deps,

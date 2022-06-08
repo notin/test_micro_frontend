@@ -1,6 +1,6 @@
 let pk = {
     pokeName : "",
-    pokeAbilityUrls: [{name: "", url: ""}],
+    pokeAbility: [{name: "", url: ""}],
     pokeFormUrl : "",
     pokeMoveUrls: [{name: "", url: "", level_at:""}]
 }

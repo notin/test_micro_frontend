@@ -4,6 +4,8 @@ import "./Pokemon.scss"
 import {Link, Route, useLocation} from "react-router-dom";
 // import Ability from "../abilities/Ability";
 // @ts-ignore
+import Ability from "ability/Ability";
+// @ts-ignore
 import Form from "form/Form";
 import pk from "./contexts/pk";
 // import Move from "../move/Move";
@@ -23,6 +25,7 @@ let Pokemon = (name : IName) => {
     const [actionsVisible, setActionsVisible] = useState(url);
     const [titleClass, setTitleClass] = useState(actionsVisible);
     const [nameArrow, setNameArrow] = useState(faArrowRight)
+    const [abilities, setAbilities] = useState([])
     useEffect(() => {
         fetchItems().then(r =>
             console.log("got pokemon details"))
@@ -32,7 +35,7 @@ let Pokemon = (name : IName) => {
         let data = await fetch(url);
         let items = await data.json();
         pk.pokeFormUrl = items.forms[0].url
-        pk.pokeAbilityUrls = items.abilities[0].url
+        pk.pokeAbility = items.abilities.map(x=> {name : x.ability.name } )
         pk.pokeMoveUrls = items.moves[0].url
         setPokemon(items);
         // @ts-ignore
@@ -77,13 +80,13 @@ let Pokemon = (name : IName) => {
 
 
     function getAbility() {
-        let abilities: any [] = [];
-        for (let i: number = 0; i < pk.pokeAbilityUrls.length; i++) {
-            // abilities.push(<Ability index={i}/>)
+        let col: any [] = [];
+        for (let i: number = 0; i < abilities.length; i++) {
+            col.push(<Ability index={abilities[i]}/>)
         }
         return <div className="pokeBase">
             <div>Abilities</div>
-            {abilities}</div>;
+            {col}</div>;
     }
 
     function getPokemonTitle() {
@@ -107,13 +110,14 @@ let Pokemon = (name : IName) => {
 
                                     <div>
                                         {getForm()}
+                                        {getAbility()}
                                     </div>
 
                                     {/*<div hidden={actionsVisible}><ActionSideBar></ActionSideBar></div>*/}
                                     {/*</div>*/}
 
 
-                                    {/*{getAbility()}*/}
+
                                     {/*{getMove()}*/}
                                 </div>
                             </div>
