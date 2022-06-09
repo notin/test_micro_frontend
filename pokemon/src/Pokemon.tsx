@@ -1,15 +1,13 @@
 // @ts-ignore
 import React, {useState, useEffect, createContext} from "react";
 import "./Pokemon.scss"
-import {Link, Route, useLocation} from "react-router-dom";
-// import Ability from "../abilities/Ability";
 // @ts-ignore
 import Ability from "ability/Ability";
 // @ts-ignore
 import Form from "form/Form";
 import pk from "./contexts/pk";
-// import Move from "../move/Move";
-import ActionSideBar from '../src/ActionsSideBar/ActionSideBar'
+// @ts-ignore
+import Move from "move/Move";
 import {faArrowDown, faArrowLeft, faArrowRight} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 // @ts-ignore
@@ -26,6 +24,7 @@ let Pokemon = (name : IName) => {
     const [titleClass, setTitleClass] = useState(actionsVisible);
     const [nameArrow, setNameArrow] = useState(faArrowRight)
     const [abilities, setAbilities] = useState([])
+    const [moves, setMoves] = useState([])
     useEffect(() => {
         fetchItems().then(r =>
             console.log("got pokemon details"))
@@ -38,6 +37,9 @@ let Pokemon = (name : IName) => {
         const abilityNames =[]
         items.abilities.forEach(x=> abilityNames.push({name : x.ability.name }) );
         setAbilities( abilityNames);
+        const moveNames =[]
+        items.moves.forEach(x=> moveNames.push({name : x.move.name }) );
+        setMoves( moveNames);
         pk.pokeMoveUrls = items.moves[0].url
         setPokemon(items);
         // @ts-ignore
@@ -70,18 +72,24 @@ let Pokemon = (name : IName) => {
         return fragment;
     }
 
-    let getMove = () => {
-        let moves: any [] = [];
-        for (let i: number = 0; i < pk.pokeMoveUrls.length; i++) {
-            // moves.push(<Move index= {i}></Move>)
+    const getMove = () => {
+
+        let fragment: any = <React.Fragment></React.Fragment>;
+        if (nameArrow != faArrowRight) {
+            let col: any [] = [];
+            for (let i: number = 0; i < moves.length; i++) {
+                col.push(<Move index={moves[i]}/>)
+            }
+            fragment = <div className="pokeBase">
+                <div>Move</div>
+                {col}</div>;
         }
-        return <div className="pokeBase">
-            <div>Moves</div>
-            {moves}</div>;
+        return fragment;
+
     }
 
 
-    function getAbility() {
+    const getAbility = () => {
         let fragment: any = <React.Fragment></React.Fragment>;
         if (nameArrow != faArrowRight) {
             let col: any [] = [];
@@ -95,14 +103,14 @@ let Pokemon = (name : IName) => {
         return fragment;
     }
 
-    function getPokemonTitle() {
+    const getPokemonTitle = () => {
         const div1 = <div className={titleClass}>
             {name.name}
         </div>;
         return div1;
     }
 
-    function getPokemon() {
+    const getPokemon = () => {
         const provider = <PokemonContext.Provider value={pk}>
             <div className="pokeItem ">
                 <div id="list">
@@ -117,14 +125,8 @@ let Pokemon = (name : IName) => {
                                     <div>
                                         {getForm()}
                                         {getAbility()}
+                                        {getMove()}
                                     </div>
-
-                                    {/*<div hidden={actionsVisible}><ActionSideBar></ActionSideBar></div>*/}
-                                    {/*</div>*/}
-
-
-
-                                    {/*{getMove()}*/}
                                 </div>
                             </div>
 
@@ -137,7 +139,6 @@ let Pokemon = (name : IName) => {
     }
 
     let div = getPokemon();
-    // const div = <div>"I am a pokemon"</div>
     return div
 };
 export default Pokemon;
