@@ -8,7 +8,9 @@ import Form from "form/Form";
 import pk from "./contexts/pk";
 // @ts-ignore
 import Move from "move/Move";
+
 import {faArrowDown, faArrowLeft, faArrowRight} from "@fortawesome/free-solid-svg-icons";
+
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 // @ts-ignore
 import IName from "./IName";

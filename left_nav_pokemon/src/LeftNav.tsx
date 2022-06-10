@@ -2,7 +2,7 @@
 import React, {useState, useEffect, createContext, Context, useRef} from "react";
 import "./LeftHandNav.scss"
 // @ts-ignore
-import {BrowserRouter as Router, Routes, Route, Link, useHistory} from "react-router-dom";
+import {BrowserRouter as Router, Routes, Route, Link, useHistory, Switch } from "react-router-dom";
 // import Pokemon from "./pokemon/Pokemon";
 // @ts-ignore
 import Pokemon from "pokemon/Pokemon";
@@ -99,7 +99,15 @@ function LeftNav() {
         let div1 = <React.Fragment/>
         if(selected){
            div1 = <div className="list">
-                <Pokemon name={selected}/>
+               <Router>
+                   <div className="text-3xl mx-auto max-w-6xl">
+                       <div className="my-10">
+                           <Switch>
+                               <Route path="/product/:selected" element = {<Pokemon name={selected}/>} />
+                           </Switch>
+                       </div>
+                   </div>
+               </Router>
             </div>;
         }
         return div1;

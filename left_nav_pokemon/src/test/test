@@ -1,0 +1,17 @@
+// @ts-ignore
+import React, {useState, useEffect, createContext, Context, useRef} from "react";
+import "./LeftHandNav.scss"
+// @ts-ignore
+import {BrowserRouter as Router, Routes, Route, Link, useHistory, Switch } from "react-router-dom";
+// import Pokemon from "./pokemon/Pokemon";
+// @ts-ignore
+import Pokemon from "pokemon/Pokemon";
+import Collapsible from "react-collapsible";
+
+function LeftNav() {
+
+
+    let div = <div>asdfas</div>
+    return div
+}
+export default LeftNav;
