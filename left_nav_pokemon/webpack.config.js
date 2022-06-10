@@ -3,6 +3,7 @@ const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPl
 
 const deps = require("./package.json").dependencies;
 module.exports = {
+  devtool: 'source-map',
   output: {
     publicPath: "http://localhost:9093/",
   },
@@ -43,8 +44,12 @@ module.exports = {
     new ModuleFederationPlugin({
       name: "left_nav_pokemon",
       filename: "remoteEntry.js",
-      remotes: {},
-      exposes: {},
+      remotes: {
+        pokemon : "pokemon@http://localhost:9094/remoteEntry.js"
+      },
+      exposes: {
+        "./pk" : "/src/contexts/pk.ts",
+      },
       shared: {
         ...deps,
         react: {

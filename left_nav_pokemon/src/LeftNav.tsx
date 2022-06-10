@@ -2,9 +2,10 @@
 import React, {useState, useEffect, createContext, Context, useRef} from "react";
 import "./LeftHandNav.scss"
 // @ts-ignore
-import {BrowserRouter as Router, Route, Link, useHistory} from "react-router-dom";
+import {BrowserRouter as Router, Routes, Route, Link, useHistory} from "react-router-dom";
 // import Pokemon from "./pokemon/Pokemon";
 // @ts-ignore
+import Pokemon from "pokemon/Pokemon";
 import Collapsible from "react-collapsible";
 
 function LeftNav() {
@@ -18,6 +19,7 @@ function LeftNav() {
     let [filtered, setFilter] = useState<any[]>([])
     let [searchTerm, setSearchTerm] = useState<any[]>([])
     let [items, setItems] = useState<any[]>([])
+    let [selected, setSelected] = useState<string>()
     let [urlState, setUrl] = useState<any[]>([]);
     let handleScroll = async ( e:any) => {
         let b = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
@@ -41,9 +43,9 @@ function LeftNav() {
     let fetchItems= async () => {
         let urlLocal = urlState.length === 0 ? url : urlState
         // @ts-ignore
-
         let these : [] = await fetchFromURL(urlLocal);
         let nextResults : []  = await fetchFromURL(next);
+        // @ts-ignore
         let total: never[] | ((prevState: never[]) => never[]) = [] ;
         // @ts-ignore
         items.forEach(x=> total.push(x))
@@ -54,18 +56,15 @@ function LeftNav() {
         setItems(total);
     }
 
-    function getLi(item:any, id:number) {
+    const getLi = (item:any, id:number) =>{
         let li =
-            <Link id={item.name + "-" + id}
-                  to={{pathname :"/components/pokemon/Pokemon/"+item.name,
-                      state: {item}}}
-            >
+            <div id={item.name + "-" + id}>
                 <li className="listItems" key={id}>
-                    <div >
+                    <div onClick={()=>{setSelected(item.name)}}>
                         {item.name}
                     </div>
                 </li>
-            </Link>
+            </div>
         return li;
     }
     let id = 0;
@@ -96,19 +95,33 @@ function LeftNav() {
         </ul>;
     }
 
-// @ts-ignore
-    let div = <div className="dark" ref={listInnerRef}>
-        <div className="hbox">
-            <Router>
+    function getPokemon() {
+        let div1 = <React.Fragment/>
+        if(selected){
+           div1 = <div className="list">
+                <Pokemon name={selected}/>
+            </div>;
+        }
+        return div1;
+    }
+
+    function getList() {
+        return <div className="dark" ref={listInnerRef}>
+            <div className="hbox">
+                {/*<Routes>*/}
+                {/*<Router>*/}
                 <div id="pokemonNav">
                     {getPokeList()}
                 </div>
-                <div className="list">
-                    {/*<Route path="/components/pokemon/" component={Pokemon}/>*/}
-                </div>
-            </Router>
-        </div>
-    </div>
+                {getPokemon()}
+                {/*</Router>*/}
+                {/*</Routes>*/}
+            </div>
+        </div>;
+    }
+
+// @ts-ignore
+    let div = getList()
     return div
 }
 export default LeftNav;

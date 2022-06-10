@@ -1,14 +1,15 @@
+
 // @ts-ignore
 import React from "react";
 // @ts-ignore
 import ReactDOM from "react-dom";
 
 import "./index.css";
-import Pokemon from "./Pokemon";
+import Form from "./form/Form";
 
 const App = () => (
-    <div className="container">
-        <Pokemon></Pokemon>
+  <div className="container">
+    {/*<Form index={0} f = {null}/>*/}
   </div>
 );
 ReactDOM.render(<App />, document.getElementById("app"));

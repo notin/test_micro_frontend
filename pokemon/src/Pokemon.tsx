@@ -1,99 +1,144 @@
+// @ts-ignore
 import React, {useState, useEffect, createContext} from "react";
 import "./Pokemon.scss"
-import { Link, Route, useLocation} from "react-router-dom";
-// import Ability from "../abilities/Ability";
-// import Form from "../form/Form";
+// @ts-ignore
+import Ability from "ability/Ability";
+// @ts-ignore
+import Form from "form/Form";
 import pk from "./contexts/pk";
-// import Move from "../move/Move";
-// import ActionSideBar from "../ActionsSideBar/ActionSideBar";
-// import {faArrowDown, faArrowLeft} from "@fortawesome/free-solid-svg-icons";
-// import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+// @ts-ignore
+import Move from "move/Move";
+import {faArrowDown, faArrowLeft, faArrowRight} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+// @ts-ignore
+import IName from "./IName";
 
-export const PokemonContext  =  createContext(pk);
+export const PokemonContext = createContext(pk);
 
-let Pokemon = () => {
-    let props = useLocation();
-    // @ts-ignore
-    let url = props.state.item.url;
-    let [pokemon, setPokemon] = useState([]);
-    let [actionsVisible, setActionsVisible] = useState(url);
-    let [titleClass, setTitleClass] = useState(actionsVisible);
-    useEffect(()=> {fetchItems().then(r =>
-        console.log("got pokemon details"))
-    ;},[url])
+let Pokemon = (name : IName) => {
+
+    const [n, setName] = useState(name.name)
+    const [url, setUrl] = useState('https://pokeapi.co/api/v2/pokemon/'+name.name)
+    const [pokemon, setPokemon] = useState([false]);
+    const [actionsVisible, setActionsVisible] = useState(url);
+    const [titleClass, setTitleClass] = useState(actionsVisible);
+    const [nameArrow, setNameArrow] = useState(faArrowRight)
+    const [abilities, setAbilities] = useState([])
+    const [moves, setMoves] = useState([])
+    useEffect(() => {
+        fetchItems().then(r =>
+            console.log("got pokemon details"))
+        ;
+    }, [url])
     let fetchItems = async () => {
         let data = await fetch(url);
         let items = await data.json();
         pk.pokeFormUrl = items.forms[0].url
-        for(let i = 0 ; i< items.abilities.length; i++)
-        {
-            let a = items.abilities[i];
-
-            let items1 = { name: a.ability.name, url:a.ability.url};
-            pk.pokeAbilityUrls.push(items1);
-        }
-        for(let i = 0 ; i< items.moves.length; i++)
-        {
-            let m = items.moves[i];
-            let items1 = { name: m.move.name, url:m.move.url, level_at :m.version_group_details[0].level_learned_at};
-            pk.pokeMoveUrls.push(items1);
-        }
+        const abilityNames =[]
+        items.abilities.forEach(x=> abilityNames.push({name : x.ability.name }) );
+        setAbilities( abilityNames);
+        const moveNames =[]
+        items.moves.forEach(x=> moveNames.push({name : x.move.name }) );
+        setMoves( moveNames);
+        pk.pokeMoveUrls = items.moves[0].url
         setPokemon(items);
+        // @ts-ignore
         setActionsVisible(true)
         setTitleClass("pokeTitleLarge");
     }
 
-    let toggleActions=()=> {
+    let toggleActions = () => {
+        // @ts-ignore
         setActionsVisible(!actionsVisible);
-        let titleClazz = titleClass == "pokeTitleLarge" ? "pokeTitleMinimized":"pokeTitleLarge";
+        let titleClazz = titleClass == "pokeTitleLarge" ? "pokeTitleMinimized" : "pokeTitleLarge";
         setTitleClass(titleClazz);
+        const faArrow = nameArrow == faArrowDown ? faArrowRight : faArrowDown;
+        setNameArrow(faArrow);
     }
 
     // @ts-ignore
-    let p = <>{props.state.item.name}</>;
+    let p = <>{name}</>;
     // @ts-ignore
-    pk.pokeName = props.state.item.name;
+    pk.pokeName = name;
+
     function getForm() {
-        return <Form/>;
-    }
-
-    let getMove = () =>{
-        let moves : any [] = [];
-        for(let i:number = 0; i< pk.pokeMoveUrls.length; i++){
-            moves.push(<Move index= {i}></Move>)
+        let fragment: any = <React.Fragment></React.Fragment>;
+        if (nameArrow != faArrowRight) {
+            const pokeFormUrl = pk.pokeFormUrl;
+            const i = pokeFormUrl.split('/pokemon-form/')[1].split("/")[0];
+            fragment = <Form index = {i}></Form>
         }
-        return <div className="pokeBase"><div>Moves</div>{moves}</div>;
+
+        return fragment;
     }
 
-    function getAbility() {
-        let abilities: any [] = [];
-        for(let i:number = 0; i< pk.pokeAbilityUrls.length; i++){
-            abilities.push(<Ability index={i}/>)
+    const getMove = () => {
+
+        let fragment: any = <React.Fragment></React.Fragment>;
+        if (nameArrow != faArrowRight) {
+            let col: any [] = [];
+            for (let i: number = 0; i < moves.length; i++) {
+                col.push(<Move index={moves[i]}/>)
+            }
+            fragment = <div className="pokeBase">
+                <div>Move</div>
+                {col}</div>;
         }
-        return <div className="pokeBase"><div>Abiliteis</div>{abilities}</div>;
+        return fragment;
+
     }
 
-    let div = <PokemonContext.Provider value={pk}>
-        <div className="pokeItem ">
-            <div id="list">
-                <p>
-                    <ul>
-                        <div className="pokeBase hbox collapse" >
-                            <div className={titleClass}>
-                                <p>{p}</p>
+
+    const getAbility = () => {
+        let fragment: any = <React.Fragment></React.Fragment>;
+        if (nameArrow != faArrowRight) {
+            let col: any [] = [];
+            for (let i: number = 0; i < abilities.length; i++) {
+                col.push(<Ability index={abilities[i]}/>)
+            }
+            fragment = <div className="pokeBase">
+                <div>Abilities</div>
+                {col}</div>;
+        }
+        return fragment;
+    }
+
+    const getPokemonTitle = () => {
+        const div1 = <div className={titleClass}>
+            {name.name}
+        </div>;
+        return div1;
+    }
+
+    const getPokemon = () => {
+        const provider = <PokemonContext.Provider value={pk}>
+            <div className="pokeItem ">
+                <div id="list">
+                    <div>
+                        <ul>
+                            <div>
+                                <div >
+                                    <div className="pokeBase hbox"><FontAwesomeIcon onClick={toggleActions} className="actionOptionArrow" icon={nameArrow} style={{paddingRight: "15px"}}></FontAwesomeIcon>
+
+                                        {getPokemonTitle()}</div>
+
+                                    <div>
+                                        {getForm()}
+                                        {getAbility()}
+                                        {getMove()}
+                                    </div>
+                                </div>
                             </div>
 
-                            <FontAwesomeIcon onClick={toggleActions} className="actionOptionArrow" icon={faArrowLeft}></FontAwesomeIcon>
-                            <div hidden={actionsVisible}><ActionSideBar></ActionSideBar></div>
-                        </div>
-                        {getForm()}
-                        {getAbility()}
-                        {getMove()}
-                    </ul>
-                </p>
+                        </ul>
+                    </div>
+                </div>
             </div>
-        </div>
-    </PokemonContext.Provider>;
+        </PokemonContext.Provider>;
+        return provider;
+    }
+
+    let div = getPokemon();
     return div
 };
 export default Pokemon;

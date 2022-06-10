@@ -1,0 +1,26 @@
+.abilities {
+  //display: none;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  text-align: -webkit-match-parent;
+  box-sizing: border-box;
+}
+
+.abilities-collapse{
+max-width: 10pc;
+}
+
+.hbox {
+  display: flex;
+  flex-direction: row !important;
+  position: relative;
+}
+
+.base{
+  position: relative;
+  padding: .5rem 1rem;
+  color: #212529;
+  text-decoration: none;
+  background-color: #fff;
+  border: 1px solid rgba(0,0,0,.125) !important;
+}

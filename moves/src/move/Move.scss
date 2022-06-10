@@ -1,0 +1,32 @@
+.moves {
+  //display: none;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  text-align: -webkit-match-parent;
+  box-sizing: border-box;
+}
+.vbox {
+  display: flex;
+  flex-direction: column !important;
+  position: relative;
+}
+.base{
+  position: relative;
+  padding: .5rem 1rem;
+  color: #212529;
+  text-decoration: none;
+  background-color: #fff;
+  border: 1px solid rgba(0,0,0,.125) !important;
+}
+.icon {
+  padding-left: 10px;
+}
+.stretch {
+  position: relative;
+  padding-left: 50pc;
+}
+.hbox {
+  display: flex;
+  flex-direction: row !important;
+  position: relative;
+}
