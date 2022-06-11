@@ -94,7 +94,7 @@ function LeftNav() {
       <div
         onClick={() => {
           setSelected(item.name);
-          navigate(item.name);
+          navigate(`pokemon/${item.name}`);
         }}
       >
         <Link
