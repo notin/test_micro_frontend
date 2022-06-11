@@ -24,6 +24,7 @@ let Ability = (ability: IAbility ) => {
     ;},[url])
     let fetchAbilities= async () => {
         if(url) {
+            console.log("getting ability")
             let data = await fetch(url);
             let items = await data.json();
 

@@ -12,7 +12,7 @@ import Collapsible from "react-collapsible";
 
 function LeftNav() {
 
-    const listInnerRef = useRef();
+    const listInnerRef = useRef(true);
     let counter = 0;
     // @ts-ignore
     let url = "https://pokeapi.co/api/v2/pokemon/?limit=200";
@@ -31,7 +31,20 @@ function LeftNav() {
         }
     };
 
-    useEffect(()=> {fetchItems();},[counter] );
+    useEffect(()=> {
+        if(listInnerRef.current){
+            fetchItems();
+        }
+
+
+        return () => {
+            listInnerRef.current = false
+            if(listInnerRef.current == false) {
+                setSelected("")
+            }
+        }}
+
+        ,[selected] );
 
     let fetchFromURL= async (input: string) => {
         let data = await fetch(input);
@@ -43,7 +56,8 @@ function LeftNav() {
     }
 
     let fetchItems= async () => {
-        let urlLocal = urlState.length === 0 ? url : urlState
+        console.log("selecting pokemon")
+        let urlLocal = urlState && urlState.length === 0 ? url : urlState
         // @ts-ignore
         let these : [] = await fetchFromURL(urlLocal);
         let nextResults : []  = await fetchFromURL(next);
@@ -104,6 +118,13 @@ function LeftNav() {
         if(selected !== ""){
             routes = <Routes>
                 <Route path="/pokemon/:name" element={<Pokemon name={selected}/>}/>
+            </Routes>;
+        }
+        else if (window.location.pathname.includes("pokemon")) {
+            const selectedPokemon = window.location.pathname.split("pokemon/")[1];
+            setSelected(selectedPokemon);
+            routes = <Routes>
+                <Route path="/pokemon/:name" element={<Pokemon name={selectedPokemon}/>}/>
             </Routes>;
         }
 

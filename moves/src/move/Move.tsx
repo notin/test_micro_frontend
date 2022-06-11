@@ -14,6 +14,7 @@ let Move = ( mv: any ) => {
         console.log("got getting ability"));
     ;},[url])
     let fetchMove = async () => {
+        console.log("getting move")
         let data = await fetch(url);
         let items = await data.json();
         setMoves(items);
