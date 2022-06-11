@@ -11,30 +11,22 @@ interface IAbility {
 
 let Ability = (ability: IAbility) => {
   // @ts-ignore
-  let [url, setURL] = useState(
-    "https://pokeapi.co/api/v2/ability/" + ability.index.name
-  );
   let [abilities, setAbilities] = useState<AbilityType>();
-
-  const location = window.location;
 
   useEffect(() => {
     console.log("getting abilties");
     fetchAbilities().then(() => console.log("got getting ability"));
   }, [ability]);
 
-  useEffect(() => {
-    setURL("https://pokeapi.co/api/v2/ability/" + ability.index.name);
-  }, [ability]);
   let fetchAbilities = async () => {
-    if (url) {
-      console.log("getting ability");
-      let data = await fetch(url);
-      let items = await data.json();
+    console.log("getting ability");
+    let data = await fetch(
+      "https://pokeapi.co/api/v2/ability/" + ability.index.name
+    );
+    let items = await data.json();
 
-      let denormalized = new AbilityType(items.name, items.effect_entries);
-      setAbilities(denormalized);
-    }
+    let denormalized = new AbilityType(items.name, items.effect_entries);
+    setAbilities(denormalized);
   };
 
   let getAbilitInfo = (a: AbilityType) => {
