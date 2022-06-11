@@ -67,13 +67,8 @@ let Pokemon = (name : IName) => {
         setNameArrow(faArrow);
     }
 
-    // @ts-ignore
-    let p = <>{name}</>;
-    // @ts-ignore
-    pk.pokeName = name;
-
     function getForm() {
-        let fragment: any = <React.Fragment></React.Fragment>;
+        let fragment = <React.Fragment></React.Fragment>;
         if (nameArrow != faArrowRight && form) {
             fragment = <Form index = {form}></Form>
         }
@@ -131,6 +126,7 @@ let Pokemon = (name : IName) => {
                                         {getPokemonTitle()}</div>
 
                                     <div>
+
                                         {getForm()}
                                         {getAbility()}
                                         {getMove()}

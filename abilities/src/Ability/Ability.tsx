@@ -40,11 +40,12 @@ let Ability = (ability: IAbility ) => {
             let abilities1 = a.abilities;
             if(abilities1 != undefined ) {
                 let effectEntries : AbilityDetails = abilities1 as unknown as AbilityDetails;
-                let items = <div id={a.name}>
+                let items = <React.Fragment><div id={a.name}>
+                    <div>{a.name}:</div>
                     <div className="hbox">
                         {effectEntries.effect}
                     </div>
-                </div>;
+                </div></React.Fragment>;
                 col.push(items);
             }
 

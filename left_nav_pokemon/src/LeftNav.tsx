@@ -74,7 +74,10 @@ function LeftNav() {
 
     const getLi = (item:any, id:number) =>{
         let li =
-            <div onClick={()=>setSelected(item.name)}>
+            <div onClick={()=>{setSelected(item.name)
+                //TODO: make read from common context
+                window.location.reload();}
+            }>
             <Link id={item.name + "-" + id}
                   to={{pathname :"/pokemon/"+item.name}}>
                 <li className="listItems" key={id}>
@@ -132,10 +135,11 @@ function LeftNav() {
     }
 
     function getList() {
-        return <div className="dark" ref={listInnerRef}>
+        return <div className="dark"
+                    // ref={listInnerRef}
+        >
             <div className="hbox">
                 <Router>
-
                     <div id="pokemonNav">
                         {getPokeList()}
                     </div>

@@ -16,22 +16,12 @@ let Form = ( index : any ) => {
 
     useEffect(()=> {fetchForm().then(r =>
         console.log("got getting form"));
-    ;},[url])
+    ;},[url, index.index])
     let fetchForm= async () => {
-        if(!form) {
-            try{
-                console.log("setting form")
-                let data = await fetch(url);
-                let f = await data.json();
-                setForm(f);
-            }
-            catch (e) {
-                console.log(e.message)
-            }
-        }
-        else {
-            console.log("form already exists")
-        }
+        console.log("setting form")
+        let data = await fetch(url);
+        let f = await data.json();
+        setForm(f);
 
     }
 
@@ -66,7 +56,7 @@ let Form = ( index : any ) => {
             f = <div className="base">
                 <div className="hbox">
                     <div>
-                        <div>
+                        <div id = {index.index}>
                             Form
                         </div>
                         <div id="formOrder">{getOrder()}</div>
