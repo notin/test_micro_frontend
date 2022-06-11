@@ -2,10 +2,12 @@
 import React, {useState, useEffect, createContext, Context, useRef} from "react";
 import "./LeftHandNav.scss"
 // @ts-ignore
-import {BrowserRouter as Router, Routes, Route, Link, useHistory} from "react-router-dom";
+import {BrowserRouter as Router, Routes, Route, Link, useHistory, Switch } from "react-router-dom";
 // import Pokemon from "./pokemon/Pokemon";
 // @ts-ignore
 import Pokemon from "pokemon/Pokemon";
+// @ts-ignore
+import Test from "./test/test";
 import Collapsible from "react-collapsible";
 
 function LeftNav() {
@@ -19,7 +21,7 @@ function LeftNav() {
     let [filtered, setFilter] = useState<any[]>([])
     let [searchTerm, setSearchTerm] = useState<any[]>([])
     let [items, setItems] = useState<any[]>([])
-    let [selected, setSelected] = useState<string>()
+    let [selected, setSelected] = useState(window.location.pathname.includes("pokemon") ? window.location.pathname.split("pokemon/")[1]: "")
     let [urlState, setUrl] = useState<any[]>([]);
     let handleScroll = async ( e:any) => {
         let b = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
@@ -58,13 +60,15 @@ function LeftNav() {
 
     const getLi = (item:any, id:number) =>{
         let li =
-            <div id={item.name + "-" + id}>
+            <div onClick={()=>setSelected(item.name)}>
+            <Link id={item.name + "-" + id}
+                  to={{pathname :"/pokemon/"+item.name}}>
                 <li className="listItems" key={id}>
-                    <div onClick={()=>{setSelected(item.name)}}>
+                    <div >
                         {item.name}
                     </div>
                 </li>
-            </div>
+            </Link></div>
         return li;
     }
     let id = 0;
@@ -95,27 +99,28 @@ function LeftNav() {
         </ul>;
     }
 
-    function getPokemon() {
-        let div1 = <React.Fragment/>
-        if(selected){
-           div1 = <div className="list">
-                <Pokemon name={selected}/>
-            </div>;
+    function getRoutes() {
+        let routes = <React.Fragment/>
+        if(selected !== ""){
+            routes = <Routes>
+                <Route path="/pokemon/:name" element={<Pokemon name={selected}/>}/>
+            </Routes>;
         }
-        return div1;
+
+        return routes;
     }
 
     function getList() {
         return <div className="dark" ref={listInnerRef}>
             <div className="hbox">
-                {/*<Routes>*/}
-                {/*<Router>*/}
-                <div id="pokemonNav">
-                    {getPokeList()}
-                </div>
-                {getPokemon()}
-                {/*</Router>*/}
-                {/*</Routes>*/}
+                <Router>
+
+                    <div id="pokemonNav">
+                        {getPokeList()}
+                    </div>
+                    {getRoutes()}
+
+                </Router>
             </div>
         </div>;
     }
