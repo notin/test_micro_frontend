@@ -2,15 +2,17 @@
 import React, {useState, useEffect, createContext, Context, useRef} from "react";
 import "./LeftHandNav.scss"
 // @ts-ignore
-import {BrowserRouter as Router, Routes, Route, Link, useHistory} from "react-router-dom";
+import {BrowserRouter as Router, Routes, Route, Link, useHistory, Switch } from "react-router-dom";
 // import Pokemon from "./pokemon/Pokemon";
 // @ts-ignore
 import Pokemon from "pokemon/Pokemon";
+// @ts-ignore
+import Test from "./test/test";
 import Collapsible from "react-collapsible";
 
 function LeftNav() {
 
-    const listInnerRef = useRef();
+    const listInnerRef = useRef(true);
     let counter = 0;
     // @ts-ignore
     let url = "https://pokeapi.co/api/v2/pokemon/?limit=200";
@@ -19,7 +21,7 @@ function LeftNav() {
     let [filtered, setFilter] = useState<any[]>([])
     let [searchTerm, setSearchTerm] = useState<any[]>([])
     let [items, setItems] = useState<any[]>([])
-    let [selected, setSelected] = useState<string>()
+    let [selected, setSelected] = useState(window.location.pathname.includes("pokemon") ? window.location.pathname.split("pokemon/")[1]: "")
     let [urlState, setUrl] = useState<any[]>([]);
     let handleScroll = async ( e:any) => {
         let b = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
@@ -29,7 +31,20 @@ function LeftNav() {
         }
     };
 
-    useEffect(()=> {fetchItems();},[counter] );
+    useEffect(()=> {
+        if(listInnerRef.current){
+            fetchItems();
+        }
+
+
+        return () => {
+            listInnerRef.current = false
+            if(listInnerRef.current == false) {
+                setSelected("")
+            }
+        }}
+
+        ,[selected] );
 
     let fetchFromURL= async (input: string) => {
         let data = await fetch(input);
@@ -41,7 +56,8 @@ function LeftNav() {
     }
 
     let fetchItems= async () => {
-        let urlLocal = urlState.length === 0 ? url : urlState
+        console.log("selecting pokemon")
+        let urlLocal = urlState && urlState.length === 0 ? url : urlState
         // @ts-ignore
         let these : [] = await fetchFromURL(urlLocal);
         let nextResults : []  = await fetchFromURL(next);
@@ -58,13 +74,18 @@ function LeftNav() {
 
     const getLi = (item:any, id:number) =>{
         let li =
-            <div id={item.name + "-" + id}>
+            <div onClick={()=>{setSelected(item.name)
+                //TODO: make read from common context
+                window.location.reload();}
+            }>
+            <Link id={item.name + "-" + id}
+                  to={{pathname :"/pokemon/"+item.name}}>
                 <li className="listItems" key={id}>
-                    <div onClick={()=>{setSelected(item.name)}}>
+                    <div >
                         {item.name}
                     </div>
                 </li>
-            </div>
+            </Link></div>
         return li;
     }
     let id = 0;
@@ -95,27 +116,36 @@ function LeftNav() {
         </ul>;
     }
 
-    function getPokemon() {
-        let div1 = <React.Fragment/>
-        if(selected){
-           div1 = <div className="list">
-                <Pokemon name={selected}/>
-            </div>;
+    function getRoutes() {
+        let routes = <React.Fragment/>
+        if(selected !== ""){
+            routes = <Routes>
+                <Route path="/pokemon/:name" element={<Pokemon name={selected}/>}/>
+            </Routes>;
         }
-        return div1;
+        else if (window.location.pathname.includes("pokemon")) {
+            const selectedPokemon = window.location.pathname.split("pokemon/")[1];
+            setSelected(selectedPokemon);
+            routes = <Routes>
+                <Route path="/pokemon/:name" element={<Pokemon name={selectedPokemon}/>}/>
+            </Routes>;
+        }
+
+        return routes;
     }
 
     function getList() {
-        return <div className="dark" ref={listInnerRef}>
+        return <div className="dark"
+                    // ref={listInnerRef}
+        >
             <div className="hbox">
-                {/*<Routes>*/}
-                {/*<Router>*/}
-                <div id="pokemonNav">
-                    {getPokeList()}
-                </div>
-                {getPokemon()}
-                {/*</Router>*/}
-                {/*</Routes>*/}
+                <Router>
+                    <div id="pokemonNav">
+                        {getPokeList()}
+                    </div>
+                    {getRoutes()}
+
+                </Router>
             </div>
         </div>;
     }

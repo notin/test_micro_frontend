@@ -24,27 +24,38 @@ let Pokemon = (name : IName) => {
     const [titleClass, setTitleClass] = useState(actionsVisible);
     const [nameArrow, setNameArrow] = useState(faArrowRight)
     const [abilities, setAbilities] = useState([])
+    const [form, setForm] = useState<string>()
     const [moves, setMoves] = useState([])
     useEffect(() => {
         fetchItems().then(r =>
             console.log("got pokemon details"))
         ;
-    }, [url])
+    }, [n, nameArrow, name.name])
     let fetchItems = async () => {
+        console.log("start calls")
         let data = await fetch(url);
         let items = await data.json();
-        pk.pokeFormUrl = items.forms[0].url
+
+        const f = items.forms[0].url.split('/pokemon-form/')[1].split("/")[0]
+        console.log("setting form from pokemon ")
+        setForm(f);
         const abilityNames =[]
         items.abilities.forEach(x=> abilityNames.push({name : x.ability.name }) );
+        console.log("setting ability from pokemon ")
         setAbilities( abilityNames);
         const moveNames =[]
         items.moves.forEach(x=> moveNames.push({name : x.move.name }) );
+        console.log("setting move from pokemon ")
         setMoves( moveNames);
-        pk.pokeMoveUrls = items.moves[0].url
         setPokemon(items);
         // @ts-ignore
         setActionsVisible(true)
         setTitleClass("pokeTitleLarge");
+        return ()=>{
+            setAbilities([])
+            setMoves([]);
+            setForm("1")
+        }
     }
 
     let toggleActions = () => {
@@ -56,19 +67,11 @@ let Pokemon = (name : IName) => {
         setNameArrow(faArrow);
     }
 
-    // @ts-ignore
-    let p = <>{name}</>;
-    // @ts-ignore
-    pk.pokeName = name;
-
     function getForm() {
-        let fragment: any = <React.Fragment></React.Fragment>;
-        if (nameArrow != faArrowRight) {
-            const pokeFormUrl = pk.pokeFormUrl;
-            const i = pokeFormUrl.split('/pokemon-form/')[1].split("/")[0];
-            fragment = <Form index = {i}></Form>
+        let fragment = <React.Fragment></React.Fragment>;
+        if (nameArrow != faArrowRight && form) {
+            fragment = <Form index = {form}></Form>
         }
-
         return fragment;
     }
 
@@ -123,6 +126,7 @@ let Pokemon = (name : IName) => {
                                         {getPokemonTitle()}</div>
 
                                     <div>
+
                                         {getForm()}
                                         {getAbility()}
                                         {getMove()}
