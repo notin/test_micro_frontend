@@ -69,10 +69,10 @@ function LeftNav() {
 
   let fetchItems = async () => {
     console.log("selecting pokemon");
-    let urlLocal = urlState && urlState.length === 0 ? url : urlState;
+    let urlLocal = urlState.length === 0 ? url : urlState;
     // @ts-ignore
-    let these: [] = await fetchFromURL(urlLocal);
-    let nextResults: [] = await fetchFromURL(next);
+    let these = await fetchFromURL(urlLocal);
+    let nextResults = await fetchFromURL(next);
     // @ts-ignore
     let total: any[] | ((prevState: never[]) => never[]) = [];
     // @ts-ignore
@@ -93,13 +93,13 @@ function LeftNav() {
           setSelected(item.name);
           navigate(`pokemon/${item.name}`);
         }}
-      >
+        key={id}>
         <Link
           id={item.name + "-" + id}
           to={{ pathname: "/pokemon/" + item.name }}
         >
-          <li className="listItems" key={id}>
-            <div>{item.name}</div>
+          <li className="listItems">
+            <div >{item.name}</div>
           </li>
         </Link>
       </div>
