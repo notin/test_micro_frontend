@@ -11,10 +11,6 @@ import LeftNav from "./LeftNav";
 const App = () => (
   <div className="container">
     <BrowserRouter>
-      {/*<div>Name: left_nav_pokemon</div>*/}
-      {/*<div>Framework: react</div>*/}
-      {/*<div>Language: TypeScript</div>*/}
-      {/*<div>CSS: Empty CSS</div>*/}
       <LeftNav></LeftNav>
     </BrowserRouter>
   </div>
