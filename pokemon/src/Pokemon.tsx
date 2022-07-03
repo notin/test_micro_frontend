@@ -31,6 +31,8 @@ let Pokemon = (name: IName) => {
   const [abilities, setAbilities] = useState([]);
   const [form, setForm] = useState<string>();
   const [moves, setMoves] = useState([]);
+  const [movesLimit, setMovesLimit] = useState(10);
+  const [visibleMoves, setVisibleMoves] = useState([]);
   useEffect(() => {
     fetchItems().then((r) => console.log("got pokemon details"));
   }, [n, nameArrow, name.name]);
@@ -69,6 +71,16 @@ let Pokemon = (name: IName) => {
     };
   };
 
+  let handleScroll = async (e: any) => {
+    let b =
+        e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+    if (b) {
+      console.log("scrolling");
+      let movesLimit1 = movesLimit + 5;
+      setMovesLimit( movesLimit1 )
+    }
+  };
+
   let toggleActions = () => {
     // @ts-ignore
     setActionsVisible(!actionsVisible);
@@ -87,24 +99,28 @@ let Pokemon = (name: IName) => {
     return fragment;
   }
 
-  const getMove = () => {
+  const getMoves = () => {
     let fragment: any = <React.Fragment></React.Fragment>;
     if (nameArrow != faArrowRight) {
       let col: any[] = [];
-      for (let i: number = 0; i < moves.length; i++) {
-        col.push(<Move index={moves[i]} />);
+      let ml = movesLimit < moves.length ? movesLimit : moves.length;
+      for (let i: number = 0; i < movesLimit; i++) {
+        col.push(<li><Move index={moves[i]} /></li>);
       }
       fragment = (
         <div className="pokeBase">
           <div>Move</div>
-          {col}
+          <ul onScroll={handleScroll}>
+            {col}
+          </ul>
+
         </div>
       );
     }
     return fragment;
   };
 
-  const getAbility = () => {
+  const getAbilities = () => {
     let fragment: any = <React.Fragment></React.Fragment>;
     if (nameArrow != faArrowRight) {
       let col: any[] = [];
@@ -148,8 +164,8 @@ let Pokemon = (name: IName) => {
 
                     <div>
                       {getForm()}
-                      {getAbility()}
-                      {getMove()}
+                      {getAbilities()}
+                      {getMoves()}
                     </div>
                   </div>
                 </div>
