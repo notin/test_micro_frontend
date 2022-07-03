@@ -25,12 +25,9 @@ import Collapsible from "react-collapsible";
 
 function LeftNav() {
   const listInnerRef = useRef(null);
-  let counter = 0;
-  // @ts-ignore
   let url = "https://pokeapi.co/api/v2/pokemon/?limit=200";
   let next = "";
   let [unfiltered, setUnfiltered] = useState<any[]>([]);
-  let [filtered, setFilter] = useState<any[]>([]);
   let [searchTerm, setSearchTerm] = useState<any[]>([]);
   let [items, setItems] = useState<any[]>([]);
   let [selected, setSelected] = useState(
