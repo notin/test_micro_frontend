@@ -1,6 +1,9 @@
 // @ts-ignore
-import React, { useState, useEffect, createContext } from "react";
+import React, {useState, useEffect, createContext, Suspense, lazy} from "react";
+import LoadingIndicator from "./utility/LoadingInidator"
 import "./Pokemon.scss";
+// @ts-ignore
+import ErrorBoundary from "./utility/ErrorBoundary";
 // @ts-ignore
 import Ability from "ability/Ability";
 // @ts-ignore
@@ -19,7 +22,7 @@ import IName from "./IName";
 
 export const PokemonContext = createContext(pk);
 
-let Pokemon = (name: IName) => {
+let Pokemon = async (name: IName) => {
   const [n, setName] = useState(name.name);
   const [url, setUrl] = useState(
     "https://pokeapi.co/api/v2/pokemon/" + name.name
@@ -33,17 +36,13 @@ let Pokemon = (name: IName) => {
   const [moves, setMoves] = useState([]);
   const [movesLimit, setMovesLimit] = useState(10);
   const [visibleMoves, setVisibleMoves] = useState([]);
+  const location = window.location.pathname;
+  setUrl("https://pokeapi.co/api/v2/pokemon/" + location.split("/")[2]);
+
   useEffect(() => {
     fetchItems().then((r) => console.log("got pokemon details"));
   }, [n, nameArrow, name.name]);
 
-  const location = window.location.pathname;
-
-  useEffect(() => {
-    if (location) {
-      setUrl("https://pokeapi.co/api/v2/pokemon/" + location.split("/")[2]);
-    }
-  }, [location]);
   let fetchItems = async () => {
     console.log("start calls");
     let data = await fetch(url);
@@ -70,7 +69,7 @@ let Pokemon = (name: IName) => {
       setForm("1");
     };
   };
-
+  await fetchItems().then((r) => console.log("got pokemon details"));
   let handleScroll = async (e: any) => {
     let b =
         e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
@@ -142,7 +141,9 @@ let Pokemon = (name: IName) => {
     return div1;
   };
 
-  const getPokemon = () => {
+  // @ts-ignore
+  const getPokemon = lazy(() =>
+  {
     const provider = (
       <PokemonContext.Provider value={pk}>
         <div className="pokeItem ">
@@ -176,9 +177,11 @@ let Pokemon = (name: IName) => {
       </PokemonContext.Provider>
     );
     return provider;
-  };
+  });
 
+  // @ts-ignore
   let div = getPokemon();
-  return div;
+  // @ts-ignore
+  return <ErrorBoundary fallback={<p>Could not fetch TV shows.</p>}><Suspense fallback={<LoadingIndicator />}>{div}</Suspense></ErrorBoundary>;
 };
 export default Pokemon;

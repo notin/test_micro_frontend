@@ -22,8 +22,10 @@ import Pokemon from "pokemon/Pokemon";
 // @ts-ignore
 import Test from "./test/test";
 import Collapsible from "react-collapsible";
+import ErrorBoundary from "./utility/ErrorBoundary";
+import LoadingIndicator from "./utility/LoadingInidator"
 
-function LeftNav() {
+let LeftNav = async () => {
   const listInnerRef = useRef(null);
   let url = "https://pokeapi.co/api/v2/pokemon/?limit=200";
   let next = "";
@@ -110,6 +112,7 @@ function LeftNav() {
 
   let doSearchTerm = (e: any) => {
     setSearchTerm(e.target.value);
+    filter();
   };
   let filter = () => {
     let toFilterBy = items;
@@ -146,6 +149,7 @@ function LeftNav() {
     } else if (window.location.pathname.includes("pokemon")) {
       const selectedPokemon = window.location.pathname.split("pokemon/")[1];
       setSelected(selectedPokemon);
+      // @ts-ignore
       routes = (
         <Routes>
           <Route
@@ -175,6 +179,7 @@ function LeftNav() {
 
   // @ts-ignore
   let div = getList();
-  return div;
+  // @ts-ignore
+  return <ErrorBoundary fallback={<p>Could not fetch TV shows.</p>}><Suspense fallback={<LoadingIndicator />}>{div}</Suspense></ErrorBoundary>;
 }
 export default LeftNav;

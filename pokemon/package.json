@@ -40,6 +40,8 @@
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/react-fontawesome": "^0.1.18",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-loader-spinner": "^5.1.5",
+    "react-promise-tracker": "^2.1.0"
   }
 }
