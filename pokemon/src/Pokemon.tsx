@@ -33,25 +33,23 @@ let Pokemon = (name: IName) => {
   const [moves, setMoves] = useState([]);
   const [movesLimit, setMovesLimit] = useState(10);
   const [visibleMoves, setVisibleMoves] = useState([]);
-  useEffect(() => {
-    fetchItems().then((r) => console.log("got pokemon details"));
-  }, [n, nameArrow, name.name]);
-
   const location = window.location.pathname;
-
   useEffect(() => {
     if (location) {
-      setUrl("https://pokeapi.co/api/v2/pokemon/" + location.split("/")[2]);
-    }
-  }, [location]);
+    setUrl("https://pokeapi.co/api/v2/pokemon/" + location.split("/")[2]);
+  }
+    fetchItems().then((r) => console.log("got pokemon details"));
+
+  }, [window.location.pathname, n, nameArrow, name.name]);
   let fetchItems = async () => {
     console.log("start calls");
     let data = await fetch(url);
     let items = await data.json();
 
+    setPokemon(name.name)
     const f = items.forms[0].url.split("/pokemon-form/")[1].split("/")[0];
     console.log("setting form from pokemon ");
-    setForm(f);
+    setForm(name.name);
     const abilityNames = [];
     items.abilities.forEach((x) => abilityNames.push({ name: x.ability.name }));
     console.log("setting ability from pokemon ");

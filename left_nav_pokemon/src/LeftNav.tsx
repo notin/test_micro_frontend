@@ -86,12 +86,16 @@ function LeftNav() {
 
   const navigate = useNavigate();
 
+  function clickPokemon(item: any) {
+    setSelected(item.name);
+    navigate(`pokemon/${item.name}`);
+  }
+
   const getLi = (item: any, id: number) => {
     let li = (
       <div
         onClick={() => {
-          setSelected(item.name);
-          navigate(`pokemon/${item.name}`);
+          clickPokemon(item);
         }}
         key={id}>
         <Link
