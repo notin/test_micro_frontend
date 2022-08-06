@@ -1,0 +1,7 @@
+{
+  "topic": {
+    "topic": "pokemon",
+    "partition": 0
+  },
+  "kafkaHost": "127.0.0.1:9092"
+}
