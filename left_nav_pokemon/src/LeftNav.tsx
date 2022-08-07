@@ -22,6 +22,8 @@ import Pokemon from "pokemon/Pokemon";
 // @ts-ignore
 import Test from "./test/test";
 import Collapsible from "react-collapsible";
+import KafkaProducer from "./kafka/KafkaProducer"
+
 
 function LeftNav() {
   const listInnerRef = useRef(null);
@@ -89,6 +91,8 @@ function LeftNav() {
   function clickPokemon(item: any) {
     setSelected(item.name);
     navigate(`pokemon/${item.name}`);
+    let kafkaProducer = new KafkaProducer();
+    kafkaProducer.sendM
   }
 
   const getLi = (item: any, id: number) => {

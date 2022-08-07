@@ -1,5 +1,5 @@
 const { Consumer } = require("kafka-node");
-const kafkaClient = require("./Client");
+const kafkaClient = require("./KafkaClient");
 const { topic } = require("./config.json");
 
 class KafkaConsumer {

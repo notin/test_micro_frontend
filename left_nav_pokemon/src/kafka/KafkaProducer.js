@@ -1,36 +1,33 @@
 const { Producer } = require("kafka-node");
-const kafkaClient = require("./Client");
-const { topic } = require("./config.json");
+import KafkaClient from  "./KafkaClient)";
+import  config from  "../config.json";
+import pk from '../contexts/pk'
 
 const kill = (code = 0) => process.exit(code);
 const ERROR = 1;
 
-class KafkaProducer {
-  constructor(client) {
-    this.producer = new Producer(client);
-    this.setState();
-    this.addEvents();
-    this.sendMessage();
+const KafkaProducer = () => {
+
+  const producer = new Producer(KafkaClient);
+
+
+  const addEvents=()=> {
+    producer.on("error", err => console.error(`PRODUCER ERR: ${err}`));
   }
 
-  addEvents() {
-    this.producer.on("error", err => console.error(`PRODUCER ERR: ${err}`));
-  }
-
-  setState() {
+  const setEvent = () => {
     const message = process.argv[2];
     if (message === undefined) {
       console.error("ERROR: Missing message string");
       kill(ERROR);
     }
-    this.state = {
-      payloads: [{ ...topic, messages: [message] }]
-    };
+
+    pk.events.push({ ...config, messages: [message] })
   }
 
-  sendMessage() {
+  const sendMessage =()=> {
     const { payloads } = this.state;
-    this.producer.on("ready", () => {
+    producer.on("ready", () => {
       console.log("PRODUCER READY");
 
       this.producer.send(payloads, err => {
@@ -44,6 +41,11 @@ class KafkaProducer {
       });
     });
   }
+  setEvent();
+  addEvents();
+  sendMessage();
+
 }
 
-new KafkaProducer(kafkaClient);
+// new KafkaProducer(kafkaClient);
+export default KafkaProducer;
