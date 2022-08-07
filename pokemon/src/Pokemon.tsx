@@ -36,7 +36,7 @@ let Pokemon = (name: IName) => {
   const location = window.location.pathname;
   useEffect(() => {
     if (location) {
-    setUrl("https://pokeapi.co/api/v2/pokemon/" + location.split("/")[2]);
+    setUrl("localhost:1212/pokemon/pokemon-request" + location.split("/")[2]);
   }
     fetchItems().then((r) => console.log("got pokemon details"));
 
