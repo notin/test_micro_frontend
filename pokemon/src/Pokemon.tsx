@@ -22,7 +22,7 @@ export const PokemonContext = createContext(pk);
 let Pokemon = (name: IName) => {
   const [n, setName] = useState(name.name);
   const [url, setUrl] = useState(
-    "https://pokeapi.co/api/v2/pokemon/" + name.name
+    "http://localhost:1212/pokemon/pokemon-request?name=" + name.name
   );
   const [pokemon, setPokemon] = useState([false]);
   const [actionsVisible, setActionsVisible] = useState(url);
@@ -36,7 +36,7 @@ let Pokemon = (name: IName) => {
   const location = window.location.pathname;
   useEffect(() => {
     if (location) {
-    setUrl("localhost:1212/pokemon/pokemon-request" + location.split("/")[2]);
+    setUrl("http://localhost:1212/pokemon/pokemon-request?name=" + location.split("/")[2]);
   }
     fetchItems().then((r) => console.log("got pokemon details"));
 
