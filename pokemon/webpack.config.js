@@ -46,9 +46,9 @@ module.exports = {
       filename: "remoteEntry.js",
       remotes: {
         left_nav_pokemon : "left_nav_pokemon@http://localhost:9093/remoteEntry.js",
-        form : "form@http://localhost:9095/remoteEntry.js",
-        ability : "ability@http://localhost:9096/remoteEntry.js",
-        move : "move@http://localhost:9097/remoteEntry.js"
+        // form : "form@http://localhost:9095/remoteEntry.js",
+        // ability : "ability@http://localhost:9096/remoteEntry.js",
+        // move : "move@http://localhost:9097/remoteEntry.js"
       },
       exposes: {
         // will probably need to be removed

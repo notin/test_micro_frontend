@@ -2,12 +2,12 @@
 import React, { useState, useEffect, createContext } from "react";
 import "./Pokemon.scss";
 // @ts-ignore
-import Ability from "ability/Ability";
+// import Ability from "ability/Ability";
 // @ts-ignore
-import Form from "form/Form";
+// import Form from "form/Form";
 import pk from "./contexts/pk";
 // @ts-ignore
-import Move from "move/Move";
+// import Move from "move/Move";
 import {
   faArrowDown,
   faArrowLeft,
@@ -16,6 +16,10 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // @ts-ignore
 import IName from "./IName";
+// @ts-ignore
+import * as SockJS from 'sockjs-client';
+import SockJsClient from 'react-stomp';
+import * as Stomp from 'stompjs';
 
 export const PokemonContext = createContext(pk);
 
@@ -24,7 +28,7 @@ let Pokemon = (name: IName) => {
   const [url, setUrl] = useState(
     "http://localhost:1212/pokemon/pokemon-request?name=" + name.name
   );
-  const [pokemon, setPokemon] = useState([false]);
+  const [pokemon, setPokemon] = useState();
   const [actionsVisible, setActionsVisible] = useState(url);
   const [titleClass, setTitleClass] = useState(actionsVisible);
   const [nameArrow, setNameArrow] = useState(faArrowRight);
@@ -41,33 +45,65 @@ let Pokemon = (name: IName) => {
     fetchItems().then((r) => console.log("got pokemon details"));
 
   }, [window.location.pathname, n, nameArrow, name.name]);
-  let fetchItems = async () => {
-    console.log("start calls");
-    let data = await fetch(url);
-    let items = await data.json();
+  // let fetchItems = async () => {
+  //
+  //   const websokect = new WebSocket("ws://localhost:1212/pokemon/pokemon-request?name=" + location.split("/")[2]);
+  //   websokect.onopen = () => {
+  //     console.log("connected");
+  //   }
+  //   websokect.onmessage = (message) => {
+  //     console.log(message.data);
+  //     setPokemon(JSON.parse(message.data));
+  //     setAbilities(JSON.parse(message.data).abilities);
+  //     setForm(JSON.parse(message.data).forms[0].name);
+  //     setMoves(JSON.parse(message.data).moves);
+  //     setPokemon(JSON.parse(message.data).name);
+  //   }
+  // }
 
-    setPokemon(name.name)
-    const f = items.forms[0].url.split("/pokemon-form/")[1].split("/")[0];
-    console.log("setting form from pokemon ");
-    setForm(name.name);
-    const abilityNames = [];
-    items.abilities.forEach((x) => abilityNames.push({ name: x.ability.name }));
-    console.log("setting ability from pokemon ");
-    setAbilities(abilityNames);
-    const moveNames = [];
-    items.moves.forEach((x) => moveNames.push({ name: x.move.name }));
-    console.log("setting move from pokemon ");
-    setMoves(moveNames);
-    setPokemon(items);
-    // @ts-ignore
-    setActionsVisible(true);
-    setTitleClass("pokeTitleLarge");
-    return () => {
-      setAbilities([]);
-      setMoves([]);
-      setForm("1");
-    };
-  };
+  let fetchItems = async () => {
+
+    const websokect = new WebSocket("ws://localhost:1212/pokemon/pokemon-request?name=" + location.split("/")[2]);
+    websokect.onopen = () => {
+      console.log("connected");
+    }
+    websokect.onmessage = (message) => {
+      console.log(message.data);
+      setPokemon(JSON.parse(message.data));
+      setAbilities(JSON.parse(message.data).abilities);
+      setForm(JSON.parse(message.data).forms[0].name);
+      setMoves(JSON.parse(message.data).moves);
+      setPokemon(JSON.parse(message.data).name);
+    }
+  }
+
+  // let fetchItems = async () => {
+  //   console.log("start calls");
+  //   let data = await fetch(url);
+  //   let items = await data.json();
+  //
+  //   setPokemon(name.name)
+  //   const f = items.forms[0].url.split("/pokemon-form/")[1].split("/")[0];
+  //   console.log("setting form from pokemon ");
+  //   setForm(name.name);
+  //   const abilityNames = [];
+  //   items.abilities.forEach((x) => abilityNames.push({ name: x.ability.name }));
+  //   console.log("setting ability from pokemon ");
+  //   setAbilities(abilityNames);
+  //   const moveNames = [];
+  //   items.moves.forEach((x) => moveNames.push({ name: x.move.name }));
+  //   console.log("setting move from pokemon ");
+  //   setMoves(moveNames);
+  //   setPokemon(items);
+  //   // @ts-ignore
+  //   setActionsVisible(true);
+  //   setTitleClass("pokeTitleLarge");
+  //   return () => {
+  //     setAbilities([]);
+  //     setMoves([]);
+  //     setForm("1");
+  //   };
+  // };
 
   let handleScroll = async (e: any) => {
     let b =
@@ -89,60 +125,79 @@ let Pokemon = (name: IName) => {
     setNameArrow(faArrow);
   };
 
-  function getForm() {
-    let fragment = <React.Fragment></React.Fragment>;
-    if (nameArrow != faArrowRight && form) {
-      fragment = <Form index={form}></Form>;
-    }
-    return fragment;
-  }
-
-  const getMoves = () => {
-    let fragment: any = <React.Fragment></React.Fragment>;
-    if (nameArrow != faArrowRight) {
-      let col: any[] = [];
-      let ml = movesLimit < moves.length ? movesLimit : moves.length;
-      for (let i: number = 0; i < movesLimit; i++) {
-        col.push(<li><Move index={moves[i]} /></li>);
-      }
-      fragment = (
-        <div className="pokeBase">
-          <div>Move</div>
-          <ul onScroll={handleScroll}>
-            {col}
-          </ul>
-
-        </div>
-      );
-    }
-    return fragment;
-  };
-
-  const getAbilities = () => {
-    let fragment: any = <React.Fragment></React.Fragment>;
-    if (nameArrow != faArrowRight) {
-      let col: any[] = [];
-      for (let i: number = 0; i < abilities.length; i++) {
-        col.push(<Ability index={abilities[i]} />);
-      }
-      fragment = (
-        <div className="pokeBase">
-          <div>Abilities</div>
-          {col}
-        </div>
-      );
-    }
-    return fragment;
-  };
+  // function getForm() {
+  //   let fragment = <React.Fragment></React.Fragment>;
+  //   if (nameArrow != faArrowRight && form) {
+  //     fragment = <Form index={form}></Form>;
+  //   }
+  //   return fragment;
+  // }
+  //
+  // const getMoves = () => {
+  //   let fragment: any = <React.Fragment></React.Fragment>;
+  //   if (nameArrow != faArrowRight) {
+  //     let col: any[] = [];
+  //     let ml = movesLimit < moves.length ? movesLimit : moves.length;
+  //     for (let i: number = 0; i < movesLimit; i++) {
+  //       col.push(<li><Move index={moves[i]} /></li>);
+  //     }
+  //     fragment = (
+  //       <div className="pokeBase">
+  //         <div>Move</div>
+  //         <ul onScroll={handleScroll}>
+  //           {col}
+  //         </ul>
+  //
+  //       </div>
+  //     );
+  //   }
+  //   return fragment;
+  // };
+  //
+  // const getAbilities = () => {
+  //   let fragment: any = <React.Fragment></React.Fragment>;
+  //   if (nameArrow != faArrowRight) {
+  //     let col: any[] = [];
+  //     for (let i: number = 0; i < abilities.length; i++) {
+  //       col.push(<Ability index={abilities[i]} />);
+  //     }
+  //     fragment = (
+  //       <div className="pokeBase">
+  //         <div>Abilities</div>
+  //         {col}
+  //       </div>
+  //     );
+  //   }
+  //   return fragment;
+  // };
 
   const getPokemonTitle = () => {
     const div1 = <div className={titleClass}>{name.name}</div>;
     return div1;
   };
 
+  let onConnected = () => {
+    console.log("Connected!!")
+  }
+
+  let onMessageReceived = (message) => {
+    console.log('New Message Received!!', message);
+    if(message.eventId == n){
+    setPokemon(message);
+  }
+  }
+
   const getPokemon = () => {
     const provider = (
       <PokemonContext.Provider value={pk}>
+        <SockJsClient
+            url={"localhost:9092"}
+            topics={['/pokemon-delivery']}
+            onConnect={onConnected}
+            onDisconnect={console.log("Disconnected!")}
+            onMessage={msg => onMessageReceived(msg)}
+            debug={false}
+        />
         <div className="pokeItem ">
           <div id="list">
             <div>
@@ -157,13 +212,13 @@ let Pokemon = (name: IName) => {
                         style={{ paddingRight: "15px" }}
                       ></FontAwesomeIcon>
 
-                      {getPokemonTitle()}
-                    </div>
+                    {/*  {getPokemonTitle()}*/}
+                    {/*</div>*/}
 
-                    <div>
-                      {getForm()}
-                      {getAbilities()}
-                      {getMoves()}
+                    {/*<div>*/}
+                    {/*  {getForm()}*/}
+                    {/*  {getAbilities()}*/}
+                    {/*  {getMoves()}*/}
                     </div>
                   </div>
                 </div>
