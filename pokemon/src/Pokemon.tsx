@@ -213,7 +213,7 @@ let Pokemon = (name: IName) => {
 
                     {getStandardAPICall()}
 
-                    {/*{getSockJsClient()}*/}
+                    {getSockJsClient()}
                   </div>
                 </div>
               </ul>
