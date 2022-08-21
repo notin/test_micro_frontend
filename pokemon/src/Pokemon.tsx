@@ -16,13 +16,17 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // @ts-ignore
 import IName from "./IName";
+import * as SockJS from "sockjs-client";
+import {over} from  'stompjs';
+
+// import SockJsClient from 'react-stomp';
 
 export const PokemonContext = createContext(pk);
 
 let Pokemon = (name: IName) => {
   const [n, setName] = useState(name.name);
   const [url, setUrl] = useState(
-    "https://pokeapi.co/api/v2/pokemon/" + name.name
+    "http://localhost:1212/pokemon/pokemon-request?name=" + name.name
   );
   const [pokemon, setPokemon] = useState([false]);
   const [actionsVisible, setActionsVisible] = useState(url);
@@ -33,12 +37,28 @@ let Pokemon = (name: IName) => {
   const [moves, setMoves] = useState([]);
   const [movesLimit, setMovesLimit] = useState(10);
   const [visibleMoves, setVisibleMoves] = useState([]);
+  const [reactive, setReactive] = useState(true)
   const location = window.location.pathname;
+
+  let stompClient = null;
+  const SOCKET_URL = 'http://localhost:1212/pokemon/';
+
+  async function reactiveSetup() {
+    let data = await fetch(url);
+    let items = await data.json();
+  }
+
   useEffect(() => {
     if (location) {
-    setUrl("https://pokeapi.co/api/v2/pokemon/" + location.split("/")[2]);
+    setUrl("http://localhost:1212/pokemon/pokemon-request?name=" + location.split("/")[2]);
   }
-    fetchItems().then((r) => console.log("got pokemon details"));
+    if(reactive == false){
+      fetchItems().then((r) => console.log("got pokemon details"));
+    }
+    else{
+      reactiveSetup();
+    }
+
 
   }, [window.location.pathname, n, nameArrow, name.name]);
   let fetchItems = async () => {
@@ -80,13 +100,15 @@ let Pokemon = (name: IName) => {
   };
 
   let toggleActions = () => {
-    // @ts-ignore
-    setActionsVisible(!actionsVisible);
-    let titleClazz =
-      titleClass == "pokeTitleLarge" ? "pokeTitleMinimized" : "pokeTitleLarge";
-    setTitleClass(titleClazz);
-    const faArrow = nameArrow == faArrowDown ? faArrowRight : faArrowDown;
-    setNameArrow(faArrow);
+   if(!reactive){
+     // @ts-ignore
+     setActionsVisible(!actionsVisible);
+     let titleClazz =
+         titleClass == "pokeTitleLarge" ? "pokeTitleMinimized" : "pokeTitleLarge";
+     setTitleClass(titleClazz);
+     const faArrow = nameArrow == faArrowDown ? faArrowRight : faArrowDown;
+     setNameArrow(faArrow);
+   }
   };
 
   function getForm() {
@@ -140,6 +162,74 @@ let Pokemon = (name: IName) => {
     return div1;
   };
 
+  const getStandardAPICall = () => {
+    let div1 = <React.Fragment/>
+    if(!reactive){
+      div1 = <div>
+        {getForm()}
+        {getAbilities()}
+        {getMoves()}
+      </div>;
+    }
+    return div1;
+  }
+
+  let onConnected = () => {
+    console.log("Connected!!")
+    stompClient.subscribe('/topic/pokemon-delivery', (message) => {
+        console.log(message)
+        let data = JSON.parse(message.body);
+        setPokemon(data);
+        // setForm(data.forms[0]);
+        // const abilityNames = [];
+        // data.abilities.forEach((x) => abilityNames.push({ name: x.ability.name }));
+        // setAbilities(abilityNames);
+        // const moveNames = [];
+        // data.moves.forEach((x) => moveNames.push({ name: x.move.name }));
+        // setMoves(moveNames);
+        // // setActionsVisible(true);
+        // setTitleClass("pokeTitleLarge");
+        // setNameArrow(faArrowRight);
+        }
+    );
+  }
+
+  let onMessageReceived = (msg) => {
+    console.log('New Message Received!!', msg);
+    setPokemon(msg);
+  }
+  const getReactivePokemon = () => {
+    let div1 = <React.Fragment/>
+    if(reactive){
+      // let socket = new WebSocket(SOCKET_URL);
+      let socket = new SockJS("http://localhost:1212/ws");
+      stompClient = over(socket);
+      stompClient.connect({}, onConnected);
+      div1 = <div>
+        {getForm()}
+        {getAbilities()}
+        {getMoves()}
+      </div>;
+    }
+    return div1;
+  }
+
+  function getSockJsClient() {
+    let sockJsClient = <React.Fragment/>;
+
+    if(reactive){
+      // sockJsClient = <SockJsClient
+      //     url={SOCKET_URL}
+      //     topics={['/pokemon-delivery/delivered']}
+      //     onConnect={onConnected}
+      //     onDisconnect={console.log("Disconnected!")}
+      //     onMessage={msg => onMessageReceived(msg)}
+      //     debug={false}
+      // />;
+    }
+    return sockJsClient;
+  }
+
   const getPokemon = () => {
     const provider = (
       <PokemonContext.Provider value={pk}>
@@ -151,20 +241,18 @@ let Pokemon = (name: IName) => {
                   <div>
                     <div className="pokeBase hbox">
                       <FontAwesomeIcon
-                        onClick={toggleActions}
-                        className="actionOptionArrow"
-                        icon={nameArrow}
-                        style={{ paddingRight: "15px" }}
+                          onClick={toggleActions}
+                          className="actionOptionArrow"
+                          icon={nameArrow}
+                          style={{paddingRight: "15px"}}
                       ></FontAwesomeIcon>
 
                       {getPokemonTitle()}
                     </div>
 
-                    <div>
-                      {getForm()}
-                      {getAbilities()}
-                      {getMoves()}
-                    </div>
+                    {getStandardAPICall()}
+
+                    {getSockJsClient()}
                   </div>
                 </div>
               </ul>
